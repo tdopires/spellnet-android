@@ -2,7 +2,7 @@ package br.com.spellnet
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import br.com.spellnet.ui.decklist.DeckListFragment
+import br.com.spellnet.decklist.view.DeckListFragment
 
 class MainActivity : AppCompatActivity() {
 
