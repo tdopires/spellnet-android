@@ -4,10 +4,12 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import br.com.spellnet.commom.Resource
 import br.com.spellnet.commom.safeLet
 import br.com.spellnet.databinding.DeckListFragmentBinding
 import br.com.spellnet.decklist.viewmodel.DeckListViewModel
@@ -54,14 +56,19 @@ class DeckListFragment : Fragment() {
         })
 
         viewModel.deckList().observe(this, Observer {
-            safeLet(deckListAdapter, it) { adapter, deckList ->
-                adapter.updateDeckList(deckList)
+            when (it) {
+                is Resource.Success -> {
+                    safeLet(deckListAdapter, it.data) { adapter, deckList ->
+                        adapter.updateDeckList(deckList)
+                    }
+                }
             }
         })
     }
 
     private fun openAddDeck() {
-
+        val addDeckFragment = AddDeckFragment.newInstance()
+        addDeckFragment.show(fragmentManager, addDeckFragment::javaClass.name)
     }
 
     private fun openDeckDetails(deck: Deck) {

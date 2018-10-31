@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="deckForm"
+                  type="br.com.spellnet.decklist.viewmodel.AddDeckViewModel.DeckForm"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".decklist.view.AddDeckFragment">
+
+        <EditText
+                android:id="@+id/deck_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textAllCaps="true"
+                android:textSize="18sp"
+                android:text="@={deck.name}"
+                android:hint="Deck Name"
+        />
+
+        <EditText
+                android:id="@+id/deck_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/deck_name"
+                android:textAllCaps="true"
+                android:textSize="18sp"
+                android:text="@={deck.url}"
+                android:hint="Past deck URL"
+        />
+
+        <Button
+                android:id="@+id/save_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/deck_url"
+                android:text="Save Deck"
+        />
+    </android.support.constraint.ConstraintLayout>
+</layout>

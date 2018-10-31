@@ -1,6 +1,6 @@
 package br.com.spellnet.model.deck
 
-data class DeckImport(val url: String)
+data class DeckImport(val name: String, val url: String)
 
 data class Deck(val name: String, val sections: List<DeckSection>)
 

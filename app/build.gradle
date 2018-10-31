@@ -31,17 +31,17 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    // Support
     implementation "com.android.support:appcompat-v7:$support_appcompatv7_version"
     implementation "com.android.support:recyclerview-v7:$support_appcompatv7_version"
     implementation "com.android.support:design:$support_appcompatv7_version"
-
     implementation "com.android.support.constraint:constraint-layout:$support_constraintlayout_version"
 
     // Lifecycle
     implementation "android.arch.lifecycle:extensions:$arch_lifecycle_version"
 
-    // Data Binding
-    //kapt 'com.android.databinding:compiler:3.1.4'
+    // Koin
+    implementation "org.koin:koin-core:$koin_version"
 
     // Work Manager
     implementation "android.arch.work:work-runtime-ktx:$arch_workmanager_version"
