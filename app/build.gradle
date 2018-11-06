@@ -42,6 +42,7 @@ dependencies {
 
     // Koin
     implementation "org.koin:koin-core:$koin_version"
+    implementation "org.koin:koin-android-viewmodel:$koin_version"
 
     // Work Manager
     implementation "android.arch.work:work-runtime-ktx:$arch_workmanager_version"

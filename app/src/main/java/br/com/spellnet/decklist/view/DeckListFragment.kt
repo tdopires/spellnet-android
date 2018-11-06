@@ -1,10 +1,8 @@
 package br.com.spellnet.decklist.view
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +12,7 @@ import br.com.spellnet.commom.safeLet
 import br.com.spellnet.databinding.DeckListFragmentBinding
 import br.com.spellnet.decklist.viewmodel.DeckListViewModel
 import br.com.spellnet.model.deck.Deck
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class DeckListFragment : Fragment() {
 
@@ -21,7 +20,7 @@ class DeckListFragment : Fragment() {
         fun newInstance() = DeckListFragment()
     }
 
-    private val viewModel by lazy { ViewModelProviders.of(this).get(DeckListViewModel::class.java) }
+    private val deckListViewModel : DeckListViewModel by viewModel()
 
     private lateinit var binding: DeckListFragmentBinding
     private var deckListAdapter: DeckListAdapter? = null
@@ -39,12 +38,12 @@ class DeckListFragment : Fragment() {
         binding.deckList.adapter = deckListAdapter
 
         binding.addDeckButton.setOnClickListener {
-            viewModel.addDeck()
+            deckListViewModel.addDeck()
         }
     }
 
     private fun bindToViewModel() {
-        viewModel.action().observe(this, Observer {
+        deckListViewModel.action().observe(this, Observer {
             when(it) {
                 is DeckListViewModel.Action.AddDeck -> {
                     openAddDeck()
@@ -55,7 +54,7 @@ class DeckListFragment : Fragment() {
             }
         })
 
-        viewModel.deckList().observe(this, Observer {
+        deckListViewModel.deckList().observe(this, Observer {
             when (it) {
                 is Resource.Success -> {
                     safeLet(deckListAdapter, it.data) { adapter, deckList ->
