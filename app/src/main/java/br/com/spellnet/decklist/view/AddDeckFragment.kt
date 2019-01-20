@@ -7,21 +7,37 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import br.com.spellnet.R
 import br.com.spellnet.commom.Resource
 import br.com.spellnet.databinding.AddDeckFragmentBinding
 import br.com.spellnet.decklist.viewmodel.AddDeckViewModel
+import br.com.spellnet.model.deck.Deck
 import org.koin.android.viewmodel.ext.android.viewModel
+import java.io.Serializable
 
 
 class AddDeckFragment : DialogFragment() {
 
     companion object {
-        fun newInstance() = AddDeckFragment()
+        private const val RESULT_LISTENER = "RESULT_LISTENER"
+
+        fun newInstance(resultListener: ResultListener) = AddDeckFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(RESULT_LISTENER, resultListener)
+            }
+        }
+    }
+
+    interface ResultListener : Serializable {
+        fun onDeckSaved(deck: Deck)
     }
 
     private val addDeckViewModel: AddDeckViewModel by viewModel()
 
     private lateinit var binding: AddDeckFragmentBinding
+
+    private val resultListener by lazy { this.arguments?.getSerializable(RESULT_LISTENER) as ResultListener? }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = AddDeckFragmentBinding.inflate(inflater, container, false)
@@ -37,19 +53,22 @@ class AddDeckFragment : DialogFragment() {
         binding.saveButton.setOnClickListener {
             addDeckViewModel.onSaveDeck(binding.deckForm)
         }
+        binding.deckName.requestFocus()
     }
 
     private fun bindToViewModel() {
         addDeckViewModel.saveDeck().observe(this, Observer {
             when (it) {
                 is Resource.Success -> {
-                    Log.d("SAVE_DECK", "Success")
+                    Toast.makeText(context, R.string.add_deck_success, Toast.LENGTH_LONG).show()
+                    this@AddDeckFragment.dismiss()
+                    resultListener?.onDeckSaved(it.data)
                 }
                 is Resource.Loading -> {
-                    Log.d("SAVE_DECK", "Loading")
+                    Toast.makeText(context, R.string.loading, Toast.LENGTH_SHORT).show()
                 }
                 is Resource.Error -> {
-                    Log.d("SAVE_DECK", "Error")
+                    Toast.makeText(context, R.string.add_deck_error, Toast.LENGTH_LONG).show()
                 }
             }
         })

@@ -66,7 +66,11 @@ class DeckListFragment : Fragment() {
     }
 
     private fun openAddDeck() {
-        val addDeckFragment = AddDeckFragment.newInstance()
+        val addDeckFragment = AddDeckFragment.newInstance(object : AddDeckFragment.ResultListener {
+            override fun onDeckSaved(deck: Deck) {
+                deckListViewModel.retryDeckList()
+            }
+        })
         addDeckFragment.show(fragmentManager, addDeckFragment::javaClass.name)
     }
 

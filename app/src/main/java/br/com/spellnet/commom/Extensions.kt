@@ -1,9 +1,10 @@
 package br.com.spellnet.commom
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 
-open abstract class Resource<T> {
+sealed class Resource<T> {
     class Success<T>(val data: T) : Resource<T>()
     class Error<T>(val message: String) : Resource<T>()
     class Loading<T> : Resource<T>()
@@ -11,7 +12,16 @@ open abstract class Resource<T> {
 
 typealias LiveDataResource<T> = LiveData<Resource<T>>
 typealias MutableLiveDataResource<T> = MutableLiveData<Resource<T>>
+typealias MediatorLiveDataResource<T> = MediatorLiveData<Resource<T>>
 
+fun <T> MediatorLiveData<Resource<T>>.addResourceSource(source: LiveData<Resource<T>>, onChanged: (Resource<T>?) -> Unit) {
+    this.removeSource(source)
+    this.addSource(source) {
+        if (it is Resource.Success || it is Resource.Error) {
+            onChanged(it)
+        }
+    }
+}
 
 fun <T1: Any, T2: Any, R: Any> safeLet(p1: T1?, p2: T2?, block: (T1, T2)->R?): R? {
     return if (p1 != null && p2 != null) block(p1, p2) else null
