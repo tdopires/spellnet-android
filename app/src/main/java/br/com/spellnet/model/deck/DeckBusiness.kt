@@ -1,6 +1,5 @@
 package br.com.spellnet.model.deck
 
-import android.arch.lifecycle.MediatorLiveData
 import br.com.spellnet.commom.*
 
 class DeckBusiness(private val deckRepository: DeckRepository) {
@@ -12,13 +11,11 @@ class DeckBusiness(private val deckRepository: DeckRepository) {
         }
     }
 
-    fun importDeck(deckImport: DeckImport): LiveDataResource<Deck> {
-        val result = MutableLiveDataResource<Deck>()
-        result.postValue(Resource.Loading())
-        val deck = Deck(deckImport.name, listOf())
-        deckRepository.addDeck(deck)
-        result.postValue(Resource.Success(deck))
-        return result
+    fun importDeck(deckImport: DeckImport): LiveDataResource<Deck> = MediatorLiveDataResource<Deck>().apply {
+        postValue(Resource.Loading())
+        addResourceSource(deckRepository.importDeck(deckImport)) {
+            postValue(it)
+        }
     }
 
 }

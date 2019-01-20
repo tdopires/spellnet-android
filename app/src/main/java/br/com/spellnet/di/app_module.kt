@@ -14,7 +14,8 @@ val deckModule = module {
 
     factory { DeckBusiness(get()) }
 
-    factory { DeckRepository(get()) }
+    //TODO change to factory
+    single { DeckRepository(get()) }
 
     factory { DeckService() }
     //factory { DeckDao() }

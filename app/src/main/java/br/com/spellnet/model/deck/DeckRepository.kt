@@ -1,8 +1,6 @@
 package br.com.spellnet.model.deck
 
-import br.com.spellnet.commom.LiveDataResource
-import br.com.spellnet.commom.MutableLiveDataResource
-import br.com.spellnet.commom.Resource
+import br.com.spellnet.commom.*
 
 class DeckRepository(private val deckService: DeckService) {
 
@@ -12,9 +10,16 @@ class DeckRepository(private val deckService: DeckService) {
         postValue(Resource.Success(mockedList))
     }
 
-    fun addDeck(deck: Deck): Boolean {
-        mockedList.add(deck)
-        return true
+    fun importDeck(deckImport: DeckImport): LiveDataResource<Deck> = MediatorLiveDataResource<Deck>().apply {
+        la
+        val importedDeck = deckService.importDeck(deckImport)
+        if (importedDeck != null) {
+            mockedList.add(importedDeck)
+            postValue(Resource.Success(importedDeck))
+        } else {
+            postValue(Resource.Error())
+        }
     }
+
 
 }

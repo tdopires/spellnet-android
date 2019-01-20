@@ -47,11 +47,14 @@ class AddDeckFragment : DialogFragment() {
     }
 
     private fun bindViewComponents() {
-        binding.deckForm = addDeckViewModel.deck()
-        binding.setLifecycleOwner(this)
+        binding.deckForm = AddDeckForm()
 
         binding.saveButton.setOnClickListener {
-            addDeckViewModel.onSaveDeck(binding.deckForm)
+            //addDeckViewModel.onSaveDeck(binding.deckForm)
+            val result = AddDeckForm()
+            result.name = binding.deckName.text.toString()
+            result.url = binding.deckUrl.text.toString()
+            addDeckViewModel.onSaveDeck(result)
         }
         binding.deckName.requestFocus()
     }

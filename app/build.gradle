@@ -37,6 +37,9 @@ dependencies {
     implementation "com.android.support:design:$support_appcompatv7_version"
     implementation "com.android.support.constraint:constraint-layout:$support_constraintlayout_version"
 
+    // OkHttp
+    implementation 'com.squareup.okhttp:okhttp:2.5.0'
+
     // Lifecycle
     implementation "android.arch.lifecycle:extensions:$arch_lifecycle_version"
 
