@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import br.com.spellnet.R
 import br.com.spellnet.commom.Resource
 import br.com.spellnet.commom.safeLet
 import br.com.spellnet.databinding.DeckListFragmentBinding
@@ -33,8 +34,9 @@ class DeckListFragment : Fragment() {
     }
 
     private fun bindViewComponents() {
-        deckListAdapter = DeckListAdapter(mutableListOf())
-        binding.deckList.layoutManager = LinearLayoutManager(context)
+        deckListAdapter = DeckListAdapter(mutableListOf()) {
+            deckListViewModel.openDeck(it)
+        }
         binding.deckList.adapter = deckListAdapter
 
         binding.addDeckButton.setOnClickListener {
@@ -75,6 +77,10 @@ class DeckListFragment : Fragment() {
     }
 
     private fun openDeckDetails(deck: Deck) {
-
+        // TODO change to a centralized method
+        fragmentManager?.beginTransaction()
+            ?.replace(R.id.container, DeckDetailFragment.newInstance(deck), DeckDetailFragment::class.java.simpleName) // Add this transaction to the back stack (name is an optional name for this back stack state, or null).
+            ?.addToBackStack(null)
+            ?.commit()
     }
 }

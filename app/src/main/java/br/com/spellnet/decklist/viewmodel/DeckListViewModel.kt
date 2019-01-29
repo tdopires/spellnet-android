@@ -1,13 +1,9 @@
 package br.com.spellnet.decklist.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import br.com.spellnet.commom.LiveDataResource
-import br.com.spellnet.model.deck.Card
 import br.com.spellnet.model.deck.Deck
 import br.com.spellnet.model.deck.DeckBusiness
-import br.com.spellnet.model.deck.DeckSection
 import com.example.android.architecture.blueprints.todoapp.SingleLiveEvent
 
 class DeckListViewModel(private val deckBusiness: DeckBusiness) : ViewModel() {

@@ -3,7 +3,6 @@ package br.com.spellnet.decklist.view
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,11 +19,11 @@ import java.io.Serializable
 class AddDeckFragment : DialogFragment() {
 
     companion object {
-        private const val RESULT_LISTENER = "RESULT_LISTENER"
+        private const val KEY_ARGS_RESULT_LISTENER = "KEY_ARGS_RESULT_LISTENER"
 
         fun newInstance(resultListener: ResultListener) = AddDeckFragment().apply {
             arguments = Bundle().apply {
-                putSerializable(RESULT_LISTENER, resultListener)
+                putSerializable(KEY_ARGS_RESULT_LISTENER, resultListener)
             }
         }
     }
@@ -37,7 +36,7 @@ class AddDeckFragment : DialogFragment() {
 
     private lateinit var binding: AddDeckFragmentBinding
 
-    private val resultListener by lazy { this.arguments?.getSerializable(RESULT_LISTENER) as ResultListener? }
+    private val resultListener by lazy { this.arguments?.getSerializable(KEY_ARGS_RESULT_LISTENER) as ResultListener? }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = AddDeckFragmentBinding.inflate(inflater, container, false)

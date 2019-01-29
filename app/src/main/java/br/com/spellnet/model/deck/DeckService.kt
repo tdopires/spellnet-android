@@ -1,43 +1,31 @@
 package br.com.spellnet.model.deck
 
-import br.com.spellnet.commom.LiveDataResource
-import br.com.spellnet.commom.MediatorLiveDataResource
-import br.com.spellnet.commom.MutableLiveDataResource
-import br.com.spellnet.commom.Resource
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.IOException
 
 
-class DeckService {
+class DeckService(private val deckParser: DeckParser) {
 
-    fun deckList(): LiveDataResource<List<Deck>> = MutableLiveDataResource<List<Deck>>().apply {
-        val mockedList = listOf(
-            Deck(
-                "edgar markov edh",
-                listOf(
-                    DeckSection("commander", listOf(Pair(1, Card("Edgar Markov")))),
-                    DeckSection("deck", listOf(Pair(99, Card("Swamp"))))
-                )
-            )
-        )
-
-        postValue(Resource.Success(mockedList))
-    }
-
-    suspend fun importDeck(deckImport: DeckImport): Deck? {
+    suspend fun importDeck(deckImport: DeckImport): Deck? = withContext(Dispatchers.IO) {
         val client = OkHttpClient()
 
         val request = Request.Builder()
-            .url("https://www.mtggoldfish.com/deck/download/1555036")
+            .url(deckImport.url)
             .build()
 
         val response = client.newCall(request).execute()
         if (response.isSuccessful) {
-            val responseBody = response.body()
+            try {
+                val deckResponseString = response.body().string()
 
-            return Deck(deckImport.name, listOf())
-        }
-        return null
+                Deck(deckImport.name, deckParser.parse(deckResponseString))
+            } catch (e: IOException) {
+                null
+            }
+        } else null
     }
 
 }

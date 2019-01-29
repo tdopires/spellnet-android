@@ -1,6 +1,9 @@
 package br.com.spellnet.model.deck
 
 import br.com.spellnet.commom.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 
 class DeckRepository(private val deckService: DeckService) {
 
@@ -11,13 +14,14 @@ class DeckRepository(private val deckService: DeckService) {
     }
 
     fun importDeck(deckImport: DeckImport): LiveDataResource<Deck> = MediatorLiveDataResource<Deck>().apply {
-        la
-        val importedDeck = deckService.importDeck(deckImport)
-        if (importedDeck != null) {
-            mockedList.add(importedDeck)
-            postValue(Resource.Success(importedDeck))
-        } else {
-            postValue(Resource.Error())
+        runBlocking {
+            val importedDeck = GlobalScope.async { deckService.importDeck(deckImport) }.await()
+            if (importedDeck != null) {
+                mockedList.add(importedDeck)
+                postValue(Resource.Success(importedDeck))
+            } else {
+                postValue(Resource.Error())
+            }
         }
     }
 

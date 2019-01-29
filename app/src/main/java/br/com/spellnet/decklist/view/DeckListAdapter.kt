@@ -9,7 +9,8 @@ import br.com.spellnet.R
 import br.com.spellnet.databinding.DeckListRowBinding
 import br.com.spellnet.model.deck.Deck
 
-class DeckListAdapter(private val deckList: MutableList<Deck>) : RecyclerView.Adapter<DeckListAdapter.ViewHolder>() {
+class DeckListAdapter(private val deckList: MutableList<Deck>,
+                      private val onClickListener: ((Deck) -> Unit)?) : RecyclerView.Adapter<DeckListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return DeckListAdapter.ViewHolder(LayoutInflater.from(parent.context)
@@ -19,6 +20,9 @@ class DeckListAdapter(private val deckList: MutableList<Deck>) : RecyclerView.Ad
     override fun onBindViewHolder(holder: DeckListAdapter.ViewHolder, position: Int) {
         val binding = holder.binding
         binding?.deck = deckList[position]
+        binding?.deckInfo?.setOnClickListener {
+            onClickListener?.invoke(deckList[position])
+        }
         binding?.executePendingBindings()
     }
 
