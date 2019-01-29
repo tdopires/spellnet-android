@@ -3,6 +3,7 @@ package br.com.spellnet.model.deck
 import br.com.spellnet.commom.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class DeckRepository(private val deckService: DeckService) {
@@ -14,7 +15,7 @@ class DeckRepository(private val deckService: DeckService) {
     }
 
     fun importDeck(deckImport: DeckImport): LiveDataResource<Deck> = MediatorLiveDataResource<Deck>().apply {
-        runBlocking {
+        GlobalScope.launch {
             val importedDeck = GlobalScope.async { deckService.importDeck(deckImport) }.await()
             if (importedDeck != null) {
                 mockedList.add(importedDeck)
