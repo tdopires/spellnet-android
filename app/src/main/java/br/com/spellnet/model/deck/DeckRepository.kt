@@ -1,10 +1,12 @@
 package br.com.spellnet.model.deck
 
-import br.com.spellnet.commom.*
+import br.com.spellnet.commom.LiveDataResource
+import br.com.spellnet.commom.MediatorLiveDataResource
+import br.com.spellnet.commom.MutableLiveDataResource
+import br.com.spellnet.commom.Resource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class DeckRepository(private val deckService: DeckService) {
 
