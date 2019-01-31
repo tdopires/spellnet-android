@@ -5,4 +5,5 @@
 
     <string name="add_deck_success">Deck successfully imported!</string>
     <string name="add_deck_error">Error importing deck... Check the deck URL and try again.</string>
+    <string name="deck_list_empty_state_message">You didn\'t have any decks imported yet.\n Touch on the \"+\" button bellow to start...</string>
 </resources>

@@ -7,7 +7,7 @@ class DeckParser {
     fun parse(deckString: String): List<DeckSection> {
         val deckLines = deckString.split("\n")
         val deckSections = mutableListOf<DeckSection>()
-        val currentSectionCards = mutableListOf<QuantifiedCard>()
+        val currentSectionCards = mutableListOf<CardQuantity>()
         deckLines.forEach {
             if (it.isNotBlank()) {
                 val cardQuantityDelimiterCharIndex = it.indexOf(" ")
@@ -16,17 +16,26 @@ class DeckParser {
                     val cardName = it.substring(cardQuantityDelimiterCharIndex).trim()
 
                     if (cardQuantity.toIntOrNull() != null) {
-                        currentSectionCards.add(QuantifiedCard(cardQuantity.toInt(), Card(cardName)))
+                        currentSectionCards.add(CardQuantity(cardQuantity.toInt(), Card(cardName)))
                     }
                 }
             } else {
-                deckSections.add(DeckSection("", currentSectionCards.toList()))
+                deckSections.add(DeckSection(buildDeckSectionTitleFor(currentSectionCards.size), currentSectionCards.toList()))
                 currentSectionCards.clear()
             }
         }
         if (currentSectionCards.size > 0) {
-            deckSections.add(DeckSection("", currentSectionCards.toList()))
+            deckSections.add(DeckSection(buildDeckSectionTitleFor(currentSectionCards.size), currentSectionCards.toList()))
         }
         return deckSections
+    }
+
+    //TODO remove this and get section title based on deck format (provided by some user input)
+    private fun buildDeckSectionTitleFor(size: Int): String {
+        return when (size) {
+            15 -> "Sideboard"
+            1 -> "Commander"
+            else -> "Main Deck"
+        }
     }
 }

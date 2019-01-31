@@ -1,7 +1,8 @@
-package br.com.spellnet.model.card
+package br.com.spellnet.servermodel
 
 import br.com.spellnet.commom.safeLet
-import java.math.BigDecimal
+import br.com.spellnet.model.card.Card
+import br.com.spellnet.model.card.CardPricing
 
 data class CardPricingResponse(val data: CardPricingResponseData, val status: String)
 
@@ -21,7 +22,7 @@ fun CardPricingResponse.toCardPricing(card: Card): CardPricing? {
         val sortedPrices =
             this.map { it.toBigDecimalOrNull() }.sortedBy { it }.toList()
         safeLet(sortedPrices[0], sortedPrices[1], sortedPrices[2]) { minPrice, midPrice, maxPrice ->
-            if (minPrice.toInt() != 0 && midPrice.toInt() != 0 && maxPrice.toInt() != 0) {
+            if (minPrice.toDouble() != 0.0 && midPrice.toDouble() != 0.0 && maxPrice.toDouble() != 0.0) {
                 CardPricing(card, minPrice, midPrice, maxPrice)
             } else null
         } ?: run { null }

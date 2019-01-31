@@ -10,10 +10,10 @@ data class DeckImport(val name: String, val url: String)
 data class Deck(val name: String, val sections: List<DeckSection>) : Parcelable
 
 @Parcelize
-data class DeckSection(val title: String, val cardList: List<QuantifiedCard>) : Parcelable
+data class DeckSection(val title: String, val cardList: List<CardQuantity>) : Parcelable
 
 @Parcelize
-data class QuantifiedCard(val quantity: Int, val card: Card) : Parcelable
+data class CardQuantity(val quantity: Int, val card: Card) : Parcelable
 
 // Helper extensions
 

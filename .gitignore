@@ -11,3 +11,6 @@ captures
 !.idea/codeStyles
 .idea/codeStyles/*
 !.idea/codeStyles/Project.xml
+
+app/google-services.json
+app/fabric.properties

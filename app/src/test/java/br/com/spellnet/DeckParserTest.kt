@@ -2,7 +2,7 @@ package br.com.spellnet
 
 import br.com.spellnet.model.card.Card
 import br.com.spellnet.model.deck.DeckParser
-import br.com.spellnet.model.deck.QuantifiedCard
+import br.com.spellnet.model.deck.CardQuantity
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -49,7 +49,7 @@ class DeckParserTest {
         assertEquals(2, result.size)
         assertEquals(60, result[0].cardList.sumBy { it.quantity })
         assertEquals(15, result[1].cardList.sumBy { it.quantity })
-        assertEquals(QuantifiedCard(3, Card("Arid Mesa")), result[0].cardList[0])
-        assertEquals(QuantifiedCard(4, Card("Chained to the Rocks")), result[1].cardList[0])
+        assertEquals(CardQuantity(3, Card("Arid Mesa")), result[0].cardList[0])
+        assertEquals(CardQuantity(4, Card("Chained to the Rocks")), result[1].cardList[0])
     }
 }

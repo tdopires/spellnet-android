@@ -1,5 +1,7 @@
 package br.com.spellnet.model.card
 
+import br.com.spellnet.servermodel.CardPricingResponse
+import br.com.spellnet.servermodel.toCardPricing
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Call

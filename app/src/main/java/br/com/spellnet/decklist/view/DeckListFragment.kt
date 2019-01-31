@@ -9,10 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import br.com.spellnet.R
 import br.com.spellnet.commom.Resource
+import br.com.spellnet.commom.hide
 import br.com.spellnet.commom.safeLet
+import br.com.spellnet.commom.show
 import br.com.spellnet.databinding.DeckListFragmentBinding
 import br.com.spellnet.decklist.viewmodel.DeckListViewModel
 import br.com.spellnet.model.deck.Deck
+import com.crashlytics.android.Crashlytics
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class DeckListFragment : Fragment() {
@@ -59,12 +62,21 @@ class DeckListFragment : Fragment() {
         deckListViewModel.deckList().observe(this, Observer {
             when (it) {
                 is Resource.Success -> {
-                    safeLet(deckListAdapter, it.data) { adapter, deckList ->
-                        adapter.updateDeckList(deckList)
-                    }
+                    handleDeckList(it.data)
                 }
             }
         })
+    }
+
+    private fun handleDeckList(deckList: List<Deck>) {
+        if (deckList.isEmpty()) {
+            binding.emptyState.show()
+            binding.deckList.hide()
+        } else {
+            binding.emptyState.hide()
+            binding.deckList.show()
+            deckListAdapter?.updateDeckList(deckList)
+        }
     }
 
     private fun openAddDeck() {

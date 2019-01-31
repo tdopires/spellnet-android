@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="cardPricing"
+                  type="br.com.spellnet.model.card.CardPricing"/>
+        <variable name="cardQuantity"
+                  type="br.com.spellnet.model.deck.CardQuantity"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/deck_detail_card_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textSize="16sp"
+                android:text="@{Integer.toString(cardQuantity.quantity)}"
+        />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/deck_detail_card_quantity"
+                android:layout_marginLeft="8dp"
+                android:textSize="16sp"
+                android:text="@{cardQuantity.card.name}"
+        />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintRight_toRightOf="parent"
+                android:textSize="16sp"
+                android:text="@{String.format(`%.2f`, cardPricing.minPrice.doubleValue() * cardQuantity.quantity)}"
+        />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

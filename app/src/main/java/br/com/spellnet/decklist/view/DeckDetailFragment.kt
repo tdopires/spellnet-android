@@ -10,9 +10,7 @@ import br.com.spellnet.commom.Resource
 import br.com.spellnet.commom.safeLet
 import br.com.spellnet.databinding.DeckDetailFragmentBinding
 import br.com.spellnet.decklist.viewmodel.DeckDetailViewModel
-import br.com.spellnet.model.card.CardPricing
 import br.com.spellnet.model.deck.Deck
-import br.com.spellnet.model.deck.fullFlatCardsList
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class DeckDetailFragment : Fragment() {
@@ -47,9 +45,7 @@ class DeckDetailFragment : Fragment() {
     }
 
     private fun bindViewComponents(deck: Deck) {
-        val cardPricingList =
-            deck.fullFlatCardsList().let { it.map { CardPricing(it, null, null, null) } }.toMutableList()
-        deckDetailAdapter = DeckDetailAdapter(cardPricingList)
+        deckDetailAdapter = DeckDetailAdapter(deck)
         binding.cardList.adapter = deckDetailAdapter
     }
 
