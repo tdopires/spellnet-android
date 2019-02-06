@@ -3,8 +3,11 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
+        <import type="br.com.spellnet.commom.Resource"/>
+        <import type="br.com.spellnet.model.card.CardPricing"/>
         <variable name="cardPricing"
-                  type="br.com.spellnet.model.card.CardPricing"/>
+                  type="Resource&lt;CardPricing&gt;"/>
         <variable name="cardQuantity"
                   type="br.com.spellnet.model.deck.CardQuantity"/>
     </data>
@@ -29,10 +32,18 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintLeft_toRightOf="@id/deck_detail_card_quantity"
+                app:layout_constraintLeft_toRightOf="@+id/deck_detail_card_quantity"
                 android:layout_marginLeft="8dp"
                 android:textSize="16sp"
                 android:text="@{cardQuantity.card.name}"
+        />
+
+        <ProgressBar android:layout_width="wrap_content"
+                     android:layout_height="0dp"
+                     app:layout_constraintRight_toRightOf="parent"
+                     app:layout_constraintBottom_toBottomOf="parent"
+                     app:layout_constraintTop_toTopOf="parent"
+                     android:visibility="@{cardPricing instanceof Resource.Loading ? View.VISIBLE : View.GONE}"
         />
 
         <TextView
@@ -40,7 +51,17 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintRight_toRightOf="parent"
                 android:textSize="16sp"
-                android:text="@{String.format(`%.2f`, cardPricing.minPrice.doubleValue() * cardQuantity.quantity)}"
+                android:text="Error."
+                android:visibility="@{cardPricing instanceof Resource.Error ? View.VISIBLE : View.GONE }"
+        />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintRight_toRightOf="parent"
+                android:textSize="16sp"
+                android:text="@{cardPricing instanceof Resource.Success ? String.format(`%.2f`, ((CardPricing) ((Resource.Success) cardPricing).data).minPrice.doubleValue() * cardQuantity.quantity) : ``}"
+                android:visibility="@{cardPricing instanceof Resource.Success ? View.VISIBLE : View.GONE}"
         />
 
     </android.support.constraint.ConstraintLayout>

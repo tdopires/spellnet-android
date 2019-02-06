@@ -50,14 +50,11 @@ class DeckDetailFragment : Fragment() {
     }
 
     private fun bindToViewModel(deck: Deck) {
-        deckDetailsViewModel.openDeck(deck).map {
-            it.observe(this, Observer {
-                when (it) {
-                    is Resource.Success -> {
-                        safeLet(deckDetailAdapter, it.data) { adapter, cardPricing ->
-                            adapter.updateCardPricing(cardPricing)
-                        }
-                    }
+        deckDetailsViewModel.openDeck(deck).map { cardEntry ->
+            cardEntry.value.observe(this, Observer { resource ->
+                safeLet(deckDetailAdapter, resource) { adapter, resource ->
+                    adapter.updateCardPricing(cardEntry.key, resource)
+
                 }
             })
         }

@@ -8,6 +8,10 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import java.io.IOException
+import java.math.BigDecimal
+import java.util.*
+
+private val FREE_CARD_LIST = emptyList<String>()//listOf("mountain", "island", "plains", "forest", "swamp")
 
 class CardService {
 
@@ -18,14 +22,18 @@ class CardService {
     }
 
     suspend fun fetchCardPricing(card: Card): CardPricing? = withContext(Dispatchers.IO) {
-        val response = cardPricingService.getCardPricing(card.name).execute()
-        if (response.isSuccessful) {
-            try {
-                response.body()?.toCardPricing(card)
-            } catch (e: IOException) {
-                null
-            }
-        } else null
+        if (FREE_CARD_LIST.contains(card.name.toLowerCase(Locale.US))) {
+            CardPricing(card, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO)
+        } else {
+            val response = cardPricingService.getCardPricing(card.name).execute()
+            if (response.isSuccessful) {
+                try {
+                    response.body()?.toCardPricing(card)
+                } catch (e: IOException) {
+                    null
+                }
+            } else null
+        }
     }
 
     interface CardPricingService {

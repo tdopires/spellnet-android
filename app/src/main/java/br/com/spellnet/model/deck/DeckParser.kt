@@ -20,19 +20,19 @@ class DeckParser {
                     }
                 }
             } else {
-                deckSections.add(DeckSection(buildDeckSectionTitleFor(currentSectionCards.size), currentSectionCards.toList()))
+                deckSections.add(DeckSection(buildDeckSectionTitleFor(currentSectionCards), currentSectionCards.toList()))
                 currentSectionCards.clear()
             }
         }
         if (currentSectionCards.size > 0) {
-            deckSections.add(DeckSection(buildDeckSectionTitleFor(currentSectionCards.size), currentSectionCards.toList()))
+            deckSections.add(DeckSection(buildDeckSectionTitleFor(currentSectionCards), currentSectionCards.toList()))
         }
         return deckSections
     }
 
     //TODO remove this and get section title based on deck format (provided by some user input)
-    private fun buildDeckSectionTitleFor(size: Int): String {
-        return when (size) {
+    private fun buildDeckSectionTitleFor(cardQuantities: List<CardQuantity>): String {
+        return when (cardQuantities.sumBy { it.quantity }) {
             15 -> "Sideboard"
             1 -> "Commander"
             else -> "Main Deck"

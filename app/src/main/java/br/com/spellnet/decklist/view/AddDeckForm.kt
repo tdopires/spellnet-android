@@ -16,7 +16,7 @@ class AddDeckForm : BaseObservable() {
             notifyPropertyChanged(BR.name)
         }
 
-    var url: String? = null
+    var url: String? = "https://www.mtggoldfish.com/deck/download/1555036" // null
         @Bindable get
         set(value) {
             field = value
