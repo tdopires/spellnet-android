@@ -22,7 +22,7 @@ class AddDeckFragment : DialogFragment() {
         private const val KEY_ARGS_RESULT_LISTENER = "KEY_ARGS_RESULT_LISTENER"
         private const val KEY_ARGS_DECK_URL_TO_IMPORT = "KEY_ARGS_DECK_URL_TO_IMPORT"
 
-        fun newInstance(deckUrlToImport: String?, resultListener: ResultListener) = AddDeckFragment().apply {
+        fun newInstance(deckUrlToImport: String?, resultListener: AddDeckResultListener) = AddDeckFragment().apply {
             arguments = Bundle().apply {
                 putString(KEY_ARGS_DECK_URL_TO_IMPORT, deckUrlToImport)
                 putSerializable(KEY_ARGS_RESULT_LISTENER, resultListener)
@@ -30,16 +30,12 @@ class AddDeckFragment : DialogFragment() {
         }
     }
 
-    interface ResultListener : Serializable {
-        fun onDeckSaved(deck: Deck)
-    }
-
     private val addDeckViewModel: AddDeckViewModel by viewModel()
 
     private lateinit var binding: AddDeckFragmentBinding
 
     private val deckUrlToImport by lazy { this.arguments?.getString(KEY_ARGS_DECK_URL_TO_IMPORT) }
-    private val resultListener by lazy { this.arguments?.getSerializable(KEY_ARGS_RESULT_LISTENER) as ResultListener? }
+    private val resultListener by lazy { this.arguments?.getSerializable(KEY_ARGS_RESULT_LISTENER) as AddDeckResultListener? }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = AddDeckFragmentBinding.inflate(inflater, container, false)
@@ -80,4 +76,8 @@ class AddDeckFragment : DialogFragment() {
         })
     }
 
+}
+
+interface AddDeckResultListener : Serializable {
+    fun onDeckSaved(deck: Deck)
 }

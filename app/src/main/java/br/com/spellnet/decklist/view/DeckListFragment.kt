@@ -35,8 +35,6 @@ class DeckListFragment : Fragment() {
     private lateinit var binding: DeckListFragmentBinding
     private var deckListAdapter: DeckListAdapter? = null
 
-    private val deckUrlToImport by lazy { this.arguments?.getString(KEY_ARGS_DECK_URL_TO_IMPORT) }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DeckListFragmentBinding.inflate(inflater, container, false)
         bindViewComponents()
@@ -47,8 +45,10 @@ class DeckListFragment : Fragment() {
     }
 
     private fun handleDeckUrlToImport() {
+        val deckUrlToImport = this.arguments?.getString(KEY_ARGS_DECK_URL_TO_IMPORT)
         if (deckUrlToImport != null) {
             deckListViewModel.addDeck(deckUrlToImport)
+            this.arguments?.remove(KEY_ARGS_DECK_URL_TO_IMPORT)
         }
     }
 
@@ -96,7 +96,7 @@ class DeckListFragment : Fragment() {
     }
 
     private fun openAddDeck(deckUrlToImport: String?) {
-        val addDeckFragment = AddDeckFragment.newInstance(deckUrlToImport, object : AddDeckFragment.ResultListener {
+        val addDeckFragment = AddDeckFragment.newInstance(deckUrlToImport, object : AddDeckResultListener {
             override fun onDeckSaved(deck: Deck) {
                 deckListViewModel.retryDeckList()
             }

@@ -16,16 +16,15 @@ class DeckService(private val deckParser: DeckParser) {
             .url(deckImport.url)
             .build()
 
-        val response = client.newCall(request).execute()
-        if (response.isSuccessful) {
-            try {
+        try {
+            val response = client.newCall(request).execute()
+            if (response.isSuccessful) {
                 val deckResponseString = response.body().string()
-
                 Deck(deckImport.name, deckParser.parse(deckResponseString))
-            } catch (e: IOException) {
-                null
-            }
-        } else null
+            } else null
+        } catch (e: IOException) {
+            null
+        }
     }
 
 }
