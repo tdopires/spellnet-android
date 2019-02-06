@@ -14,7 +14,6 @@ import br.com.spellnet.decklist.viewmodel.AddDeckViewModel
 import br.com.spellnet.model.deck.Deck
 import org.koin.android.viewmodel.ext.android.viewModel
 import java.io.Serializable
-import java.lang.RuntimeException
 
 
 class AddDeckFragment : DialogFragment() {
@@ -41,7 +40,6 @@ class AddDeckFragment : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = AddDeckFragmentBinding.inflate(inflater, container, false)
-        throw RuntimeException("test crash")
         bindViewComponents()
         bindToViewModel()
         return binding.root
