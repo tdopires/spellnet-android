@@ -1,5 +1,6 @@
 package br.com.spellnet
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import br.com.spellnet.decklist.view.DeckListFragment
@@ -14,9 +15,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Fabric.with(this, Crashlytics())
         setContentView(R.layout.main_activity)
+
+        val deckUrlFromIntent = if (intent?.action == Intent.ACTION_SEND && "text/plain" == intent.type) {
+            intent.getStringExtra(Intent.EXTRA_TEXT)
+        } else null
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, DeckListFragment.newInstance())
+                .replace(R.id.container, DeckListFragment.newInstance(deckUrlFromIntent))
                 .commitNow()
         }
     }

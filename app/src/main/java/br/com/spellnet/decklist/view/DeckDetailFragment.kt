@@ -10,6 +10,8 @@ import br.com.spellnet.commom.Resource
 import br.com.spellnet.commom.safeLet
 import br.com.spellnet.databinding.DeckDetailFragmentBinding
 import br.com.spellnet.decklist.viewmodel.DeckDetailViewModel
+import br.com.spellnet.model.card.Card
+import br.com.spellnet.model.card.CardPricing
 import br.com.spellnet.model.deck.Deck
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -45,20 +47,28 @@ class DeckDetailFragment : Fragment() {
     }
 
     private fun bindViewComponents(deck: Deck) {
-        deckDetailAdapter = DeckDetailAdapter(deck)
+        deckDetailAdapter = DeckDetailAdapter(deck) { card, resourceCardPricing ->
+            if (resourceCardPricing is Resource.Error) {
+                deckDetailsViewModel.retryFetchCardPricing(card).observe(this, Observer { resource ->
+                    handleCardPricingResource(card, resource)
+                })
+            }
+        }
         binding.cardList.adapter = deckDetailAdapter
     }
 
     private fun bindToViewModel(deck: Deck) {
         deckDetailsViewModel.openDeck(deck).map { cardEntry ->
             cardEntry.value.observe(this, Observer { resource ->
-                safeLet(deckDetailAdapter, resource) { adapter, resource ->
-                    adapter.updateCardPricing(cardEntry.key, resource)
-
-                }
+                handleCardPricingResource(cardEntry.key, resource)
             })
         }
+    }
 
+    private fun handleCardPricingResource(card: Card, resource: Resource<CardPricing>?) {
+        safeLet(deckDetailAdapter, resource) { adapter, safeResource ->
+            adapter.updateCardPricing(card, safeResource)
+        }
     }
 
 }

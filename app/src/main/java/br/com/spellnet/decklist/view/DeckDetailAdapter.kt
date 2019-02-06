@@ -21,7 +21,8 @@ private const val NAME_VIEW_ITEM = 1
 private const val SECTION_TITLE_VIEW_ITEM = 2
 private const val TOTAL_VALUE_VIEW_ITEM = 3
 
-class DeckDetailAdapter(deck: Deck) :
+class DeckDetailAdapter(deck: Deck,
+                        private val onClickListener: ((Card, Resource<CardPricing>) -> Unit)?) :
     RecyclerView.Adapter<DeckDetailAdapter.DeckDetailViewHolder>() {
 
     private val viewItems = mutableListOf<ViewItem>()
@@ -93,6 +94,9 @@ class DeckDetailAdapter(deck: Deck) :
             }
             holder is DeckDetailAdapter.DeckDetailViewHolder.CardViewHolder && viewItem is ViewItem.CardViewItem -> {
                 val binding = holder.binding
+                binding?.root?.setOnClickListener {
+                    onClickListener?.invoke(viewItem.cardQuantity.card, viewItem.resourceCardPricing)
+                }
                 binding?.cardPricing = viewItem.resourceCardPricing
                 binding?.cardQuantity = viewItem.cardQuantity
                 binding?.executePendingBindings()

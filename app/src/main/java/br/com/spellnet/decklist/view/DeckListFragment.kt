@@ -21,7 +21,13 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class DeckListFragment : Fragment() {
 
     companion object {
-        fun newInstance() = DeckListFragment()
+        private const val KEY_ARGS_DECK_URL_TO_IMPORT = "KEY_ARGS_DECK_URL_TO_IMPORT"
+
+        fun newInstance(deckUrlToImport: String?) = DeckListFragment().apply {
+            arguments = Bundle().apply {
+                putString(KEY_ARGS_DECK_URL_TO_IMPORT, deckUrlToImport)
+            }
+        }
     }
 
     private val deckListViewModel : DeckListViewModel by viewModel()
@@ -29,11 +35,21 @@ class DeckListFragment : Fragment() {
     private lateinit var binding: DeckListFragmentBinding
     private var deckListAdapter: DeckListAdapter? = null
 
+    private val deckUrlToImport by lazy { this.arguments?.getString(KEY_ARGS_DECK_URL_TO_IMPORT) }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = DeckListFragmentBinding.inflate(inflater, container, false)
         bindViewComponents()
         bindToViewModel()
+
+        handleDeckUrlToImport()
         return binding.root
+    }
+
+    private fun handleDeckUrlToImport() {
+        if (deckUrlToImport != null) {
+            deckListViewModel.addDeck(deckUrlToImport)
+        }
     }
 
     private fun bindViewComponents() {
@@ -51,7 +67,7 @@ class DeckListFragment : Fragment() {
         deckListViewModel.action().observe(this, Observer {
             when(it) {
                 is DeckListViewModel.Action.AddDeck -> {
-                    openAddDeck()
+                    openAddDeck(it.deckUrlToImport)
                 }
                 is DeckListViewModel.Action.OpenDeck -> {
                     openDeckDetails(it.deck)
@@ -79,8 +95,8 @@ class DeckListFragment : Fragment() {
         }
     }
 
-    private fun openAddDeck() {
-        val addDeckFragment = AddDeckFragment.newInstance(object : AddDeckFragment.ResultListener {
+    private fun openAddDeck(deckUrlToImport: String?) {
+        val addDeckFragment = AddDeckFragment.newInstance(deckUrlToImport, object : AddDeckFragment.ResultListener {
             override fun onDeckSaved(deck: Deck) {
                 deckListViewModel.retryDeckList()
             }

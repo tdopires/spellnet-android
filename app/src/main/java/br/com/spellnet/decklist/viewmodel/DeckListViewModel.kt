@@ -9,7 +9,7 @@ import com.example.android.architecture.blueprints.todoapp.SingleLiveEvent
 class DeckListViewModel(private val deckBusiness: DeckBusiness) : ViewModel() {
 
     open class Action {
-        object AddDeck : Action()
+        class AddDeck(val deckUrlToImport: String?) : Action()
         class OpenDeck(val deck: Deck) : Action()
     }
 
@@ -20,8 +20,8 @@ class DeckListViewModel(private val deckBusiness: DeckBusiness) : ViewModel() {
         deckBusiness.deckList()
     }
 
-    fun addDeck() {
-        action.value = Action.AddDeck
+    fun addDeck(deckUrlToImport: String? = null) {
+        action.value = Action.AddDeck(deckUrlToImport)
     }
 
     fun retryDeckList() {

@@ -15,4 +15,6 @@ class DeckDetailViewModel(val cardBusiness: CardBusiness) : ViewModel() {
             .map { it to cardBusiness.fetchCardPricing(it) }.toMap()
     }
 
+    fun retryFetchCardPricing(card: Card): LiveDataResource<CardPricing> = cardBusiness.fetchCardPricing(card)
+
 }

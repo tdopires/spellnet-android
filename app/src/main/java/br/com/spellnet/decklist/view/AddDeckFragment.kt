@@ -20,9 +20,11 @@ class AddDeckFragment : DialogFragment() {
 
     companion object {
         private const val KEY_ARGS_RESULT_LISTENER = "KEY_ARGS_RESULT_LISTENER"
+        private const val KEY_ARGS_DECK_URL_TO_IMPORT = "KEY_ARGS_DECK_URL_TO_IMPORT"
 
-        fun newInstance(resultListener: ResultListener) = AddDeckFragment().apply {
+        fun newInstance(deckUrlToImport: String?, resultListener: ResultListener) = AddDeckFragment().apply {
             arguments = Bundle().apply {
+                putString(KEY_ARGS_DECK_URL_TO_IMPORT, deckUrlToImport)
                 putSerializable(KEY_ARGS_RESULT_LISTENER, resultListener)
             }
         }
@@ -36,6 +38,7 @@ class AddDeckFragment : DialogFragment() {
 
     private lateinit var binding: AddDeckFragmentBinding
 
+    private val deckUrlToImport by lazy { this.arguments?.getString(KEY_ARGS_DECK_URL_TO_IMPORT) }
     private val resultListener by lazy { this.arguments?.getSerializable(KEY_ARGS_RESULT_LISTENER) as ResultListener? }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -46,8 +49,9 @@ class AddDeckFragment : DialogFragment() {
     }
 
     private fun bindViewComponents() {
-        binding.deckForm = AddDeckForm()
-
+        binding.deckForm = AddDeckForm().apply {
+            url = deckUrlToImport
+        }
         binding.saveButton.setOnClickListener {
             //addDeckViewModel.onSaveDeck(binding.deckForm)
             val result = AddDeckForm()
