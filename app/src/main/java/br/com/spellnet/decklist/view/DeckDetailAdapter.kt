@@ -2,6 +2,7 @@ package br.com.spellnet.decklist.view
 
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -112,12 +113,19 @@ class DeckDetailAdapter(deck: Deck,
     override fun getItemCount() = viewItems.size
 
     fun updateCardPricing(card: Card, resourceCardPricing: Resource<CardPricing>) {
-        val indexOfCard = viewItems.indexOfFirst {
-            it is ViewItem.CardViewItem && it.cardQuantity.card.name.equals(card.name, ignoreCase = true)
+        val cardsIndexOf = mutableListOf<Int>()
+        viewItems.forEachIndexed { index, viewItem ->
+            if (viewItem is ViewItem.CardViewItem && viewItem.cardQuantity.card.name.equals(card.name, ignoreCase = true)) {
+                cardsIndexOf.add(index)
+            }
         }
-        if (indexOfCard in 0..(viewItems.size - 1)) {
-            (viewItems[indexOfCard] as ViewItem.CardViewItem).resourceCardPricing = resourceCardPricing
-            notifyItemChanged(indexOfCard)
+        cardsIndexOf.forEach { indexOfCard ->
+            if (indexOfCard in 0..(viewItems.size - 1)) {
+                (viewItems[indexOfCard] as ViewItem.CardViewItem).resourceCardPricing = resourceCardPricing
+                notifyItemChanged(indexOfCard)
+            } else {
+                Log.d("DeckDetailsAdapter", "indexOfCard failed = $indexOfCard / viewItems.size = ${viewItems.size}")
+            }
         }
 
         updateDeckTotalValue()

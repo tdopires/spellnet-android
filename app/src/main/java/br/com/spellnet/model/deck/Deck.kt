@@ -17,4 +17,5 @@ data class CardQuantity(val quantity: Int, val card: Card) : Parcelable
 
 // Helper extensions
 
-fun Deck.fullFlatCardsList(): List<Card> = this.sections.flatMap { it.cardList.map { it.card } }
+fun Deck.fullFlatCardsList(): List<Card> =
+    this.sections.flatMap { it.cardList.map { it.card } }.distinctBy { it.name.toLowerCase() }

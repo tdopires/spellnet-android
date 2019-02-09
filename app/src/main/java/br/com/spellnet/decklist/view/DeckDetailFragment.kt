@@ -48,7 +48,7 @@ class DeckDetailFragment : Fragment() {
 
     private fun bindViewComponents(deck: Deck) {
         deckDetailAdapter = DeckDetailAdapter(deck) { card, resourceCardPricing ->
-            if (resourceCardPricing is Resource.Error) {
+            if (resourceCardPricing !is Resource.Success) {
                 deckDetailsViewModel.retryFetchCardPricing(card).observe(this, Observer { resource ->
                     handleCardPricingResource(card, resource)
                 })

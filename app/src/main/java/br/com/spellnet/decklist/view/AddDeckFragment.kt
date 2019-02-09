@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import br.com.spellnet.R
 import br.com.spellnet.commom.Resource
+import br.com.spellnet.commom.hideSoftInput
+import br.com.spellnet.commom.showSoftInput
 import br.com.spellnet.databinding.AddDeckFragmentBinding
 import br.com.spellnet.decklist.viewmodel.AddDeckViewModel
 import br.com.spellnet.model.deck.Deck
@@ -55,7 +57,7 @@ class AddDeckFragment : DialogFragment() {
             result.url = binding.deckUrl.text.toString()
             addDeckViewModel.onSaveDeck(result)
         }
-        binding.deckName.requestFocus()
+        binding.deckName.showSoftInput()
     }
 
     private fun bindToViewModel() {
@@ -64,6 +66,7 @@ class AddDeckFragment : DialogFragment() {
                 is Resource.Success -> {
                     Toast.makeText(context, R.string.add_deck_success, Toast.LENGTH_LONG).show()
                     this@AddDeckFragment.dismiss()
+                    binding.deckName.hideSoftInput()
                     resultListener?.onDeckSaved(it.data)
                 }
                 is Resource.Loading -> {
