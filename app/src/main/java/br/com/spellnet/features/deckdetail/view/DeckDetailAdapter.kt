@@ -25,11 +25,11 @@ private const val NAME_VIEW_ITEM = 1
 private const val SECTION_TITLE_VIEW_ITEM = 2
 private const val TOTAL_VALUE_VIEW_ITEM = 3
 
-class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<DeckDetailAdapter.DeckDetailViewHolder>() {
+class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val viewItems = mutableListOf<ViewItem>()
 
-    var onCardPricingRetryClickListener: ((Card, Resource<CardPricing>) -> Unit)? = null
+    var onCardPricingRetryClickListener: ((CardQuantity, Resource<CardPricing>) -> Unit)? = null
     var onHaveCardQuantityChangedListener: ((CardQuantity) -> Unit)? = null
 
     sealed class ViewItem {
@@ -66,100 +66,94 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<DeckDetailAdapter.Dec
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeckDetailViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            NAME_VIEW_ITEM -> DeckDetailViewHolder.NameViewHolder(
+            NAME_VIEW_ITEM -> NameViewHolder(
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.deck_detail_name_list_row, parent, false)
             )
-            SECTION_TITLE_VIEW_ITEM -> DeckDetailViewHolder.SectionTitleViewHolder(
+            SECTION_TITLE_VIEW_ITEM -> SectionTitleViewHolder(
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.deck_detail_section_title_list_row, parent, false)
             )
-            TOTAL_VALUE_VIEW_ITEM -> DeckDetailViewHolder.TotalValueViewHolder(
+            TOTAL_VALUE_VIEW_ITEM -> TotalValueViewHolder(
                 LayoutInflater.from(parent.context)
                     .inflate(R.layout.deck_detail_total_value_list_row, parent, false)
             )
-            else -> DeckDetailViewHolder.CardViewHolder(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.deck_detail_card_pricing_list_row, parent, false)
-            )
+            else -> {
+                val cardViewHolder = CardViewHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.deck_detail_card_pricing_list_row, parent, false)
+                )
+                createCardViewItemComponents(cardViewHolder)
+                return cardViewHolder
+            }
         }
     }
 
-    override fun onBindViewHolder(holder: DeckDetailViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val viewItem = viewItems[position]
         when {
-            holder is DeckDetailViewHolder.NameViewHolder && viewItem is ViewItem.NameViewItem -> {
-                val binding = holder.binding
-                binding?.deckName = viewItem.deckName
-                binding?.executePendingBindings()
+            holder is NameViewHolder && viewItem is ViewItem.NameViewItem -> {
+                holder.binding?.let {
+                    it.deckName = viewItem.deckName
+                    it.executePendingBindings()
+                }
+
             }
-            holder is DeckDetailViewHolder.SectionTitleViewHolder && viewItem is ViewItem.SectionTitleViewItem -> {
-                val binding = holder.binding
-                binding?.deckSectionTitle = viewItem.sectionTitle
-                binding?.executePendingBindings()
+            holder is SectionTitleViewHolder && viewItem is ViewItem.SectionTitleViewItem -> {
+                holder.binding?.let {
+                    it.deckSectionTitle = viewItem.sectionTitle
+                    it.executePendingBindings()
+                }
             }
-            holder is DeckDetailViewHolder.CardViewHolder && viewItem is ViewItem.CardViewItem -> {
-                val binding = holder.binding
-                bindCardViewItemComponents(binding, viewItem)
-                binding?.haveCardQuantity = viewItem.haveCardQuantity
-                binding?.cardPricing = viewItem.resourceCardPricing
-                binding?.haveAll = viewItem.haveCardQuantity?.quantity == viewItem.cardQuantity.quantity
-                binding?.cardQuantity = viewItem.cardQuantity
-                binding?.executePendingBindings()
+            holder is CardViewHolder && viewItem is ViewItem.CardViewItem -> {
+                holder.binding?.let {
+                    it.spinnerHaveCardQuantity.setSelection(viewItem.haveCardQuantity?.quantity ?: 0, false)
+
+                    it.haveCardQuantity = viewItem.haveCardQuantity
+                    it.cardPricing = viewItem.resourceCardPricing
+                    it.cardQuantity = viewItem.cardQuantity
+                    it.executePendingBindings()
+                }
             }
-            holder is DeckDetailViewHolder.TotalValueViewHolder && viewItem is ViewItem.TotalValueViewItem -> {
-                val binding = holder.binding
-                binding?.deckTotalValue = viewItem.deckTotalValue
-                binding?.executePendingBindings()
+            holder is TotalValueViewHolder && viewItem is ViewItem.TotalValueViewItem -> {
+                holder.binding?.let {
+                    it.deckTotalValue = viewItem.deckTotalValue
+                    it.executePendingBindings()
+                }
             }
         }
     }
 
-    private fun bindCardViewItemComponents(
-        binding: DeckDetailCardPricingListRowBinding?,
-        viewItem: ViewItem.CardViewItem
-    ) {
-        binding?.root?.let {
-            it.setOnClickListener {
-                onCardPricingRetryClickListener?.invoke(viewItem.cardQuantity.card, viewItem.resourceCardPricing)
+    private fun createCardViewItemComponents(viewHolder: CardViewHolder) {
+        viewHolder.binding?.let {
+            it.root.setOnClickListener {
+                if (viewHolder.adapterPosition < 0) return@setOnClickListener
+                val viewItem = viewItems[viewHolder.adapterPosition] as ViewItem.CardViewItem
+                onCardPricingRetryClickListener?.invoke(viewItem.cardQuantity, viewItem.resourceCardPricing)
             }
 
             val myArray = arrayListOf<CharSequence>()
-            for (i in 0..sumNeededCardQuantity(viewItem.cardQuantity.card)) {
+            for (i in 0..100) { // TODO  change to textView/editText
                 myArray.add("$i")
             }
             val cardQuantityAdapter =
-                ArrayAdapter(it.context, android.R.layout.simple_spinner_item, myArray)
+                ArrayAdapter(it.root.context, android.R.layout.simple_spinner_item, myArray)
             cardQuantityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.spinnerHaveCardQuantity.adapter = cardQuantityAdapter
+            it.spinnerHaveCardQuantity.adapter = cardQuantityAdapter
 
-            binding.spinnerHaveCardQuantity.setSelection(viewItem.haveCardQuantity?.quantity ?: 0, false)
-
-            binding.spinnerHaveCardQuantity.onItemSelectedListener =
+            it.spinnerHaveCardQuantity.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {
                     }
 
                     override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
+                        if (viewHolder.adapterPosition < 0) return
+                        val viewItem = viewItems[viewHolder.adapterPosition] as ViewItem.CardViewItem
                         onHaveCardQuantityChangedListener?.invoke(CardQuantity(pos, viewItem.cardQuantity.card))
                     }
                 }
-
-            binding.checkboxHaveCardQuantity.setOnCheckedChangeListener(null)
-            binding.checkboxHaveCardQuantity.isChecked =
-                viewItem.haveCardQuantity?.quantity == viewItem.cardQuantity.quantity
-
-            binding.checkboxHaveCardQuantity.setOnCheckedChangeListener { _, checked ->
-                val card = viewItem.cardQuantity.card
-                onHaveCardQuantityChangedListener?.invoke(
-                    CardQuantity(
-                        if (checked) sumNeededCardQuantity(card) else 0,
-                        card
-                    )
-                )
-            }
         }
     }
 
@@ -241,22 +235,20 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<DeckDetailAdapter.Dec
         updateDeckTotalValue()
     }
 
-    sealed class DeckDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        class NameViewHolder(itemView: View) : DeckDetailViewHolder(itemView) {
-            val binding: DeckDetailNameListRowBinding? = DataBindingUtil.bind(itemView)
-        }
+    class NameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val binding: DeckDetailNameListRowBinding? = DataBindingUtil.bind(itemView)
+    }
 
-        class SectionTitleViewHolder(itemView: View) : DeckDetailViewHolder(itemView) {
-            val binding: DeckDetailSectionTitleListRowBinding? = DataBindingUtil.bind(itemView)
-        }
+    class SectionTitleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val binding: DeckDetailSectionTitleListRowBinding? = DataBindingUtil.bind(itemView)
+    }
 
-        class CardViewHolder(itemView: View) : DeckDetailViewHolder(itemView) {
-            val binding: DeckDetailCardPricingListRowBinding? = DataBindingUtil.bind(itemView)
-        }
+    class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val binding: DeckDetailCardPricingListRowBinding? = DataBindingUtil.bind(itemView)
+    }
 
-        class TotalValueViewHolder(itemView: View) : DeckDetailViewHolder(itemView) {
-            val binding: DeckDetailTotalValueListRowBinding? = DataBindingUtil.bind(itemView)
-        }
+    class TotalValueViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val binding: DeckDetailTotalValueListRowBinding? = DataBindingUtil.bind(itemView)
     }
 
 }
