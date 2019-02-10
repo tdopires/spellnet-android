@@ -1,9 +1,9 @@
 package br.com.spellnet
 
-import br.com.spellnet.model.card.Card
-import br.com.spellnet.model.deck.DeckParser
-import br.com.spellnet.model.deck.CardQuantity
-import br.com.spellnet.model.deck.DeckParseException
+import br.com.spellnet.entity.Card
+import br.com.spellnet.model.decklist.DeckParser
+import br.com.spellnet.entity.CardQuantity
+import br.com.spellnet.model.decklist.DeckParseException
 import org.junit.Test
 
 import org.junit.Assert.*

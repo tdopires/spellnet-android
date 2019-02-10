@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="deckForm"
+                  type="br.com.spellnet.features.decklist.view.AddDeckForm"/>
+    </data>
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:minWidth="350dp"
+            android:paddingTop="8dp">
+
+        <EditText
+                android:id="@+id/deck_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:textAllCaps="true"
+                android:textSize="18sp"
+                android:text="@={deckForm.name}"
+                android:hint="Deck name"
+        />
+
+        <EditText
+                android:id="@+id/deck_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:textSize="18sp"
+                android:text="@={deckForm.url}"
+                android:hint="Paste deck URL (.dec file format)"
+        />
+
+        <Button
+                android:id="@+id/save_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="Import Deck"
+        />
+    </LinearLayout>
+</layout>

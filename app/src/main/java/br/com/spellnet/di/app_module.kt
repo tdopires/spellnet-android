@@ -1,15 +1,15 @@
 package br.com.spellnet.di
 
-import br.com.spellnet.decklist.viewmodel.AddDeckViewModel
-import br.com.spellnet.decklist.viewmodel.DeckDetailViewModel
-import br.com.spellnet.decklist.viewmodel.DeckListViewModel
-import br.com.spellnet.model.card.CardBusiness
-import br.com.spellnet.model.card.CardRepository
-import br.com.spellnet.model.card.CardService
-import br.com.spellnet.model.deck.DeckBusiness
-import br.com.spellnet.model.deck.DeckParser
-import br.com.spellnet.model.deck.DeckRepository
-import br.com.spellnet.model.deck.DeckService
+import br.com.spellnet.features.deckdetail.viewmodel.DeckDetailViewModel
+import br.com.spellnet.features.decklist.viewmodel.AddDeckViewModel
+import br.com.spellnet.features.decklist.viewmodel.DeckListViewModel
+import br.com.spellnet.model.deckdetail.CardBusiness
+import br.com.spellnet.model.deckdetail.CardRepository
+import br.com.spellnet.model.deckdetail.CardService
+import br.com.spellnet.model.decklist.DeckBusiness
+import br.com.spellnet.model.decklist.DeckParser
+import br.com.spellnet.model.decklist.DeckRepository
+import br.com.spellnet.model.decklist.DeckService
 import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 
