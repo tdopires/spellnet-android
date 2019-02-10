@@ -1,6 +1,5 @@
 package br.com.spellnet.features.deckdetail.view
 
-import android.content.DialogInterface
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -118,7 +117,10 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<DeckDetailAdapter.Dec
         }
     }
 
-    private fun bindCardViewItemComponents(binding: DeckDetailCardPricingListRowBinding?, viewItem: ViewItem.CardViewItem) {
+    private fun bindCardViewItemComponents(
+        binding: DeckDetailCardPricingListRowBinding?,
+        viewItem: ViewItem.CardViewItem
+    ) {
         binding?.root?.let {
             it.setOnClickListener {
                 onCardPricingRetryClickListener?.invoke(viewItem.cardQuantity.card, viewItem.resourceCardPricing)
@@ -133,7 +135,7 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<DeckDetailAdapter.Dec
             cardQuantityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinnerHaveCardQuantity.adapter = cardQuantityAdapter
 
-            binding.spinnerHaveCardQuantity.setSelection(viewItem.haveCardQuantity?.quantity ?: 0,false)
+            binding.spinnerHaveCardQuantity.setSelection(viewItem.haveCardQuantity?.quantity ?: 0, false)
 
             binding.spinnerHaveCardQuantity.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
@@ -145,11 +147,18 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<DeckDetailAdapter.Dec
                     }
                 }
 
-            binding.checkboxHaveCardQuantity.isChecked = viewItem.haveCardQuantity?.quantity == viewItem.cardQuantity.quantity
+            binding.checkboxHaveCardQuantity.setOnCheckedChangeListener(null)
+            binding.checkboxHaveCardQuantity.isChecked =
+                viewItem.haveCardQuantity?.quantity == viewItem.cardQuantity.quantity
 
             binding.checkboxHaveCardQuantity.setOnCheckedChangeListener { _, checked ->
                 val card = viewItem.cardQuantity.card
-                onHaveCardQuantityChangedListener?.invoke(CardQuantity(if (checked) sumNeededCardQuantity(card) else 0, card))
+                onHaveCardQuantityChangedListener?.invoke(
+                    CardQuantity(
+                        if (checked) sumNeededCardQuantity(card) else 0,
+                        card
+                    )
+                )
             }
         }
     }
@@ -165,7 +174,8 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<DeckDetailAdapter.Dec
                     (viewItems[index] as ViewItem.CardViewItem).haveCardQuantity = null
                 }
                 haveLeftQuantity >= viewItemCardQuantity -> {
-                    (viewItems[index] as ViewItem.CardViewItem).haveCardQuantity = CardQuantity(viewItemCardQuantity, card)
+                    (viewItems[index] as ViewItem.CardViewItem).haveCardQuantity =
+                        CardQuantity(viewItemCardQuantity, card)
                     haveLeftQuantity -= viewItemCardQuantity
                 }
                 else -> {
@@ -206,7 +216,10 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<DeckDetailAdapter.Dec
                         val cardViewItemCardPricing = cardViewItem.resourceCardPricing
                         if (cardViewItemCardPricing is Resource.Success) {
                             cardViewItemCardPricing.data.minPrice?.let { cardPricingMinPrice ->
-                                cardViewItem.cardQuantity.quantity.toDouble() * cardPricingMinPrice.toDouble()
+                                Math.max(
+                                    0,
+                                    cardViewItem.cardQuantity.quantity - (cardViewItem.haveCardQuantity?.quantity ?: 0)
+                                ).toDouble() * cardPricingMinPrice.toDouble()
                             } ?: run { 0.0 }
                         } else 0.0
 
