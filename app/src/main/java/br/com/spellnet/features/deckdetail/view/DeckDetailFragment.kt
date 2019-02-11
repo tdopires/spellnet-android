@@ -48,16 +48,11 @@ class DeckDetailFragment : Fragment() {
 
     private fun bindViewComponents(deck: Deck) {
         deckDetailAdapter = DeckDetailAdapter(deck).apply {
-            onCardPricingRetryClickListener = { cardQuantity, resourceCardPricing ->
-                if (resourceCardPricing is Resource.Success) {
-                    updateCardHaveQuantity(cardQuantity)
-                } else {
-                    val card = cardQuantity.card
-                    deckDetailsViewModel.retryFetchCardPricing(card)
-                        .observe(this@DeckDetailFragment, Observer { resource ->
-                            handleCardPricingResource(card, resource)
-                        })
-                }
+            onCardPricingRetryClickListener = { card ->
+                deckDetailsViewModel.retryFetchCardPricing(card)
+                    .observe(this@DeckDetailFragment, Observer { resource ->
+                        handleCardPricingResource(card, resource)
+                    })
             }
             onHaveCardQuantityChangedListener = { cardQuantity ->
                 //deckDetailsViewModel.updateCardCollection(cardQuantity)

@@ -28,7 +28,7 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
 
     private val viewItems = mutableListOf<ViewItem>()
 
-    var onCardPricingRetryClickListener: ((CardQuantity, Resource<CardPricing>) -> Unit)? = null
+    var onCardPricingRetryClickListener: ((Card) -> Unit)? = null
     var onHaveCardQuantityChangedListener: ((CardQuantity) -> Unit)? = null
 
     sealed class ViewItem {
@@ -128,7 +128,12 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
             binding.root.setOnClickListener {
                 if (viewHolder.adapterPosition < 0) return@setOnClickListener
                 val viewItem = viewItems[viewHolder.adapterPosition] as ViewItem.CardViewItem
-                onCardPricingRetryClickListener?.invoke(viewItem.cardQuantity, viewItem.resourceCardPricing)
+
+                if (viewItem.resourceCardPricing is Resource.Success) {
+                    toggleCardHaveQuantity(viewItem)
+                } else {
+                    onCardPricingRetryClickListener?.invoke(viewItem.cardQuantity.card)
+                }
             }
 
             binding.buttonHaveCardQuantity.setOnClickListener {
@@ -174,8 +179,33 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
         updateDeckTotalValue()
     }
 
+    private fun toggleCardHaveQuantity(viewItem: ViewItem.CardViewItem) {
+        val sumHaveCardQuantity = sumHaveCardQuantity(viewItem.cardQuantity.card)
+        val sumNeededCardQuantity = sumNeededCardQuantity(viewItem.cardQuantity.card)
+
+        if (sumHaveCardQuantity == sumNeededCardQuantity) {
+            updateCardHaveQuantity(
+                CardQuantity(
+                    0,
+                    viewItem.cardQuantity.card
+                )
+            )
+        } else {
+            updateCardHaveQuantity(
+                CardQuantity(
+                    sumHaveCardQuantity + viewItem.cardQuantity.quantity,
+                    viewItem.cardQuantity.card
+                )
+            )
+        }
+    }
+
     private fun sumNeededCardQuantity(card: Card): Int {
         return indexesOfCard(card).sumBy { (viewItems[it] as ViewItem.CardViewItem).cardQuantity.quantity }
+    }
+
+    private fun sumHaveCardQuantity(card: Card): Int {
+        return indexesOfCard(card).sumBy { (viewItems[it] as ViewItem.CardViewItem).haveCardQuantity?.quantity ?: 0 }
     }
 
     private fun indexesOfCard(card: Card): MutableList<Int> {
