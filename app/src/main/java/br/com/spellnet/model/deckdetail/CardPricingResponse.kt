@@ -21,10 +21,9 @@ fun CardPricingResponse.toCardPricing(card: Card): CardPricing? {
 
     fun normalizeAndParseDoubleString(str: String): BigDecimal? {
         return if (str.count { it == '.' } > 1) {
-            val indexOfLast = str.indexOfLast { it == '.' }
             var newStr = str
-            while (newStr.indexOfLast { it == '.' } != indexOfLast) {
-                newStr = str.replaceFirst(".", "")
+            while (newStr.count { it == '.' } > 1) {
+                newStr = newStr.replaceFirst(".", "")
             }
             newStr.toBigDecimalOrNull()
         } else {

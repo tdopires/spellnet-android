@@ -47,14 +47,13 @@ class AddDeckFragment : DialogFragment() {
     }
 
     private fun bindViewComponents() {
-        binding.deckForm = AddDeckForm().apply {
-            url = deckUrlToImport
-        }
+        //TODO use two-way databinding on AddDeckForm object
+        //TODO make a LoadingButton component
         binding.saveButton.setOnClickListener {
-            //addDeckViewModel.onSaveDeck(binding.deckForm)
-            val result = AddDeckForm()
-            result.name = binding.deckName.text.toString()
-            result.url = binding.deckUrl.text.toString()
+            binding.saveButton.text = "Importing deck..."
+            binding.saveButton.isEnabled = false
+
+            val result = AddDeckForm(name = binding.deckName.text.toString(), url = binding.deckUrl.text.toString())
             addDeckViewModel.onSaveDeck(result)
         }
         binding.deckName.showSoftInput()
@@ -73,6 +72,7 @@ class AddDeckFragment : DialogFragment() {
                     Toast.makeText(context, R.string.loading, Toast.LENGTH_SHORT).show()
                 }
                 is Resource.Error -> {
+                    binding.saveButton.isEnabled = true
                     Toast.makeText(context, R.string.add_deck_error, Toast.LENGTH_LONG).show()
                 }
             }

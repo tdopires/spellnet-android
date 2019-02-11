@@ -57,6 +57,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/deck_detail_card_separator"
                 android:layout_marginLeft="8dp"
                 android:textSize="16sp"
+                android:textColor="@{haveCardQuantity.quantity == cardQuantity.quantity ? @color/green : @color/light_gray}"
                 android:text="@{Integer.toString(cardQuantity.quantity)}"
                 tools:text="4"
         />
@@ -69,6 +70,7 @@
                 app:layout_constraintLeft_toRightOf="@+id/deck_detail_card_quantity"
                 android:layout_marginLeft="8dp"
                 android:textSize="16sp"
+                android:textColor="@{haveCardQuantity.quantity == cardQuantity.quantity ? @color/green : @color/light_gray}"
                 android:text="@{cardQuantity.card.name}"
                 tools:text="Lightning Bolt"
 
@@ -81,6 +83,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 android:textSize="16sp"
+                android:textColor="@{haveCardQuantity.quantity == cardQuantity.quantity ? @color/green : @color/light_gray}"
                 android:text="@{cardPricing instanceof Resource.Success ? String.format(`%.2f`, ((CardPricing) ((Resource.Success) cardPricing).data).minPrice.doubleValue() * Math.max(0, cardQuantity.quantity - haveCardQuantity.quantity)) : ``}"
                 android:visibility="@{cardPricing instanceof Resource.Success ? View.VISIBLE : View.GONE}"
                 tools:text="20.00"
