@@ -1,13 +1,12 @@
 package br.com.spellnet.features.deckdetail.view
 
+import android.app.AlertDialog
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import br.com.spellnet.R
 import br.com.spellnet.commom.Resource
 import br.com.spellnet.databinding.DeckDetailCardPricingListRowBinding
@@ -109,8 +108,6 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
             }
             holder is CardViewHolder && viewItem is ViewItem.CardViewItem -> {
                 holder.binding?.let {
-                    it.spinnerHaveCardQuantity.setSelection(viewItem.haveCardQuantity?.quantity ?: 0, false)
-
                     it.haveCardQuantity = viewItem.haveCardQuantity
                     it.cardPricing = viewItem.resourceCardPricing
                     it.cardQuantity = viewItem.cardQuantity
@@ -127,33 +124,28 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     private fun createCardViewItemComponents(viewHolder: CardViewHolder) {
-        viewHolder.binding?.let {
-            it.root.setOnClickListener {
+        viewHolder.binding?.let { binding ->
+            binding.root.setOnClickListener {
                 if (viewHolder.adapterPosition < 0) return@setOnClickListener
                 val viewItem = viewItems[viewHolder.adapterPosition] as ViewItem.CardViewItem
                 onCardPricingRetryClickListener?.invoke(viewItem.cardQuantity, viewItem.resourceCardPricing)
             }
 
-            val myArray = arrayListOf<CharSequence>()
-            for (i in 0..100) { // TODO  change to textView/editText
-                myArray.add("$i")
-            }
-            val cardQuantityAdapter =
-                ArrayAdapter(it.root.context, android.R.layout.simple_spinner_item, myArray)
-            cardQuantityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            it.spinnerHaveCardQuantity.adapter = cardQuantityAdapter
+            binding.buttonHaveCardQuantity.setOnClickListener {
+                if (viewHolder.adapterPosition < 0) return@setOnClickListener
+                val viewItem = viewItems[viewHolder.adapterPosition] as ViewItem.CardViewItem
 
-            it.spinnerHaveCardQuantity.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                    }
+                val options =
+                    (0..sumNeededCardQuantity(viewItem.cardQuantity.card)).map { it.toString() }.toTypedArray()
 
-                    override fun onItemSelected(parent: AdapterView<*>?, view: View, pos: Int, id: Long) {
-                        if (viewHolder.adapterPosition < 0) return
-                        val viewItem = viewItems[viewHolder.adapterPosition] as ViewItem.CardViewItem
-                        onHaveCardQuantityChangedListener?.invoke(CardQuantity(pos, viewItem.cardQuantity.card))
-                    }
+                val builder = AlertDialog.Builder(it.context)
+                builder.setTitle("How many ${viewItem.cardQuantity.card.name} you already have?")
+                builder.setItems(options) { dialog, index ->
+                    onHaveCardQuantityChangedListener?.invoke(CardQuantity(index, viewItem.cardQuantity.card))
+                    dialog.dismiss()
                 }
+                builder.show()
+            }
         }
     }
 

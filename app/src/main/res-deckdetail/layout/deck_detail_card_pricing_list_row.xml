@@ -23,17 +23,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <Spinner
-                android:id="@+id/spinner_have_card_quantity"
+        <Button
+                android:id="@+id/button_have_card_quantity"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="@drawable/dropdown_background"
-                android:minWidth="30dp"
-                android:spinnerMode="dialog"
+                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginLeft="8dp"
+                android:text="@{Integer.toString(haveCardQuantity.quantity)}"
         />
 
         <TextView
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/spinner_have_card_quantity"
+                app:layout_constraintLeft_toRightOf="@+id/button_have_card_quantity"
                 android:layout_marginLeft="8dp"
                 android:textSize="16sp"
                 android:text="/"
