@@ -47,6 +47,10 @@ class AddDeckFragment : DialogFragment() {
     }
 
     private fun bindViewComponents() {
+        deckUrlToImport?.let {
+            binding.deckUrl.append(it)
+        }
+
         //TODO use two-way databinding on AddDeckForm object
         //TODO make a LoadingButton component
         binding.saveButton.setOnClickListener {
