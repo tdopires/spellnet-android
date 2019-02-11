@@ -3,6 +3,8 @@ package br.com.spellnet.di
 import br.com.spellnet.features.deckdetail.viewmodel.DeckDetailViewModel
 import br.com.spellnet.features.decklist.viewmodel.AddDeckViewModel
 import br.com.spellnet.features.decklist.viewmodel.DeckListViewModel
+import br.com.spellnet.model.cardcollection.CardCollectionBusiness
+import br.com.spellnet.model.cardcollection.CardCollectionRepository
 import br.com.spellnet.model.deckdetail.CardBusiness
 import br.com.spellnet.model.deckdetail.CardRepository
 import br.com.spellnet.model.deckdetail.CardService
@@ -17,14 +19,15 @@ import org.koin.dsl.module.module
 val module = module {
     viewModel { DeckListViewModel(get()) }
     viewModel { AddDeckViewModel(get()) }
-    viewModel { DeckDetailViewModel(get()) }
+    viewModel { DeckDetailViewModel(get(), get()) }
 
     factory { DeckBusiness(get()) }
     factory { CardBusiness(get()) }
+    factory { CardCollectionBusiness(get()) }
 
-    //TODO change to factory later (when decks database implemented)
-    single { DeckRepository(get()) }
+    single { DeckRepository(get()) } //TODO change to factory later (when room database implemented)
     factory { CardRepository(get()) }
+    single { CardCollectionRepository() } //TODO change to factory later (when room database implemented)
 
     factory { DeckService(get()) }
     factory { CardService() }

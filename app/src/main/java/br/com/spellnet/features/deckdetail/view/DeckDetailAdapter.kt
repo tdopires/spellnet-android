@@ -183,15 +183,8 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
         val sumHaveCardQuantity = sumHaveCardQuantity(viewItem.cardQuantity.card)
         val sumNeededCardQuantity = sumNeededCardQuantity(viewItem.cardQuantity.card)
 
-        if (sumHaveCardQuantity == sumNeededCardQuantity) {
-            updateCardHaveQuantity(
-                CardQuantity(
-                    0,
-                    viewItem.cardQuantity.card
-                )
-            )
-        } else {
-            updateCardHaveQuantity(
+        if (sumHaveCardQuantity < sumNeededCardQuantity) {
+            onHaveCardQuantityChangedListener?.invoke(
                 CardQuantity(
                     sumHaveCardQuantity + viewItem.cardQuantity.quantity,
                     viewItem.cardQuantity.card

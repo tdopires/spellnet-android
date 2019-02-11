@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 class DeckRepository(private val deckService: DeckService) {
 
-    private val mockedList = mutableListOf<Deck>()
+    private val mockedList = mutableListOf<Deck>() //TODO change it to room database
 
     fun deckList(): LiveDataResource<List<Deck>> = MutableLiveDataResource<List<Deck>>().apply {
         postValue(Resource.Success(mockedList))

@@ -55,7 +55,7 @@ class DeckDetailFragment : Fragment() {
                     })
             }
             onHaveCardQuantityChangedListener = { cardQuantity ->
-                //deckDetailsViewModel.updateCardCollection(cardQuantity)
+                deckDetailsViewModel.updateCardCollection(cardQuantity)
                 updateCardHaveQuantity(cardQuantity)
             }
         }
@@ -64,9 +64,13 @@ class DeckDetailFragment : Fragment() {
 
     private fun bindToViewModel(deck: Deck) {
         deckDetailsViewModel.openDeck(deck).map { cardEntry ->
-            cardEntry.value.observe(this, Observer { resource ->
+            val (haveCardQuantity, resourceCardPricing) = cardEntry.value
+            resourceCardPricing.observe(this, Observer { resource ->
                 handleCardPricingResource(cardEntry.key, resource)
             })
+            haveCardQuantity?.let {
+                deckDetailAdapter?.updateCardHaveQuantity(it)
+            }
         }
     }
 
