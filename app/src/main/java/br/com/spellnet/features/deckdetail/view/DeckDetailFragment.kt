@@ -68,9 +68,11 @@ class DeckDetailFragment : Fragment() {
             resourceCardPricing.observe(this, Observer { resource ->
                 handleCardPricingResource(cardEntry.key, resource)
             })
-            haveCardQuantity?.let {
-                deckDetailAdapter?.updateCardHaveQuantity(it)
-            }
+            haveCardQuantity.observe(this, Observer {
+                if (it is Resource.Success) {
+                    deckDetailAdapter?.updateCardHaveQuantity(it.data)
+                }
+            })
         }
     }
 

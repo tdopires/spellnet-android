@@ -6,10 +6,10 @@ import br.com.spellnet.entity.*
 import br.com.spellnet.model.cardcollection.CardCollectionBusiness
 import br.com.spellnet.model.deckdetail.CardBusiness
 
-class DeckDetailViewModel(val cardBusiness: CardBusiness, val cardCollectionBusiness: CardCollectionBusiness) :
+class DeckDetailViewModel(private val cardBusiness: CardBusiness, private val cardCollectionBusiness: CardCollectionBusiness) :
     ViewModel() {
 
-    fun openDeck(deck: Deck): Map<Card, Pair<CardQuantity?, LiveDataResource<CardPricing>>> {
+    fun openDeck(deck: Deck): Map<Card, Pair<LiveDataResource<CardQuantity>, LiveDataResource<CardPricing>>> {
         return deck.fullFlatCardsList()
             .map { it to Pair(cardCollectionBusiness.fetchHaveCardQuantity(it), cardBusiness.fetchCardPricing(it)) }
             .toMap()
