@@ -9,7 +9,7 @@ class CardCollectionBusiness(val cardCollectionRepository: CardCollectionReposit
     fun fetchHaveCardQuantity(card: Card): CardQuantity? =
         cardCollectionRepository.fetchHaveCardQuantity(card)
 
-    fun updateCardCollection(haveCardQuantity: CardQuantity): Unit =
+    fun updateCardCollection(haveCardQuantity: CardQuantity) =
         cardCollectionRepository.updateCardCollection(haveCardQuantity)
 
 }

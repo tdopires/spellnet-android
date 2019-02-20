@@ -38,6 +38,10 @@ android {
     androidExtensions {
         experimental = true
     }
+
+    useLibrary 'android.test.runner'
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
 }
 
 dependencies {
@@ -64,7 +68,7 @@ dependencies {
     // Room
     implementation "androidx.room:room-runtime:2.1.0-alpha04"
     kapt "androidx.room:room-compiler:2.1.0-alpha04"
-    implementation "androidx.room:room-coroutines:2.1.0-alpha04"
+//    implementation "androidx.room:room-coroutines:2.1.0-alpha04"
 
     // Koin
     implementation "org.koin:koin-core:1.0.1"
@@ -81,9 +85,24 @@ dependencies {
 //    }
     implementation "com.crashlytics.sdk.android:crashlytics:2.9.9"
 
-    // Test dependencies
+    /////////////////////////////////////////// Test dependencies ///////////////////////////////////////////
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.2-alpha01'
+
+    // Core library
+    androidTestImplementation 'androidx.test:core:1.1.0'
+
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.1.1'
+
+    // Assertions
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+
+    // Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.2-alpha01'
+
+    // Koin
+    androidTestImplementation 'org.koin:koin-test:1.0.1'
+    testImplementation "androidx.room:room-testing:2.1.0-alpha04"
 
 }

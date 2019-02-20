@@ -1,5 +1,7 @@
 package br.com.spellnet.di
 
+import androidx.room.Room
+import br.com.spellnet.database.CardDatabase
 import br.com.spellnet.features.deckdetail.viewmodel.DeckDetailViewModel
 import br.com.spellnet.features.decklist.viewmodel.AddDeckViewModel
 import br.com.spellnet.features.decklist.viewmodel.DeckListViewModel
@@ -12,6 +14,7 @@ import br.com.spellnet.model.decklist.DeckBusiness
 import br.com.spellnet.model.decklist.DeckParser
 import br.com.spellnet.model.decklist.DeckRepository
 import br.com.spellnet.model.decklist.DeckService
+import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.ext.koin.viewModel
 import org.koin.dsl.module.module
 
@@ -27,7 +30,7 @@ val module = module {
 
     single { DeckRepository(get()) } //TODO change to factory later (when room database implemented)
     factory { CardRepository(get()) }
-    single { CardCollectionRepository() } //TODO change to factory later (when room database implemented)
+    factory { CardCollectionRepository(get()) }
 
     factory { DeckService(get()) }
     factory { CardService() }
@@ -36,6 +39,11 @@ val module = module {
 
     //TODO implement database (room)
     //factory { DeckDao() }
+    single {
+        Room.databaseBuilder(androidApplication(), CardDatabase::class.java, "cards-db").build()
+    }
+
+    single { get<CardDatabase>().cardCollectionDao() }
 }
 
 // Gather all app modules
