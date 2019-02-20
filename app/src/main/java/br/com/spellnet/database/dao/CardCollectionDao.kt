@@ -2,10 +2,6 @@ package br.com.spellnet.database.dao
 
 import androidx.room.*
 import br.com.spellnet.database.entity.CardCollectionQuantityEntity
-import br.com.spellnet.entity.CardQuantity
-import android.database.sqlite.SQLiteConstraintException
-import androidx.room.OnConflictStrategy
-import androidx.room.Update
 import br.com.spellnet.database.entity.CardEntity
 
 @Dao
