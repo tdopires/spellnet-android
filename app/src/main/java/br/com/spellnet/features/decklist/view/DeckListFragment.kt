@@ -1,8 +1,8 @@
 package br.com.spellnet.features.decklist.view
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +37,7 @@ class DeckListFragment : Fragment() {
         binding = DeckListFragmentBinding.inflate(inflater, container, false)
         bindViewComponents()
         bindToViewModel()
+        handleDeckUrlToImport()
         return binding.root
     }
 
@@ -97,7 +98,7 @@ class DeckListFragment : Fragment() {
                 deckListViewModel.retryDeckList()
             }
         })
-        addDeckFragment.show(fragmentManager, addDeckFragment::javaClass.name)
+        addDeckFragment.show(requireFragmentManager(), addDeckFragment::javaClass.name)
     }
 
     private fun openDeckDetails(deck: Deck) {

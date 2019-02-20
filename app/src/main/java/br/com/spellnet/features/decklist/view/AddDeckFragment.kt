@@ -1,9 +1,9 @@
 package br.com.spellnet.features.decklist.view
 
-import android.arch.lifecycle.Observer
+import androidx.lifecycle.Observer
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,6 +70,7 @@ class AddDeckFragment : DialogFragment() {
                 is Resource.Success -> {
                     Toast.makeText(context, R.string.add_deck_success, Toast.LENGTH_LONG).show()
                     resultListener?.onDeckSaved(it.data)
+                    binding.root.hideSoftInput()
                     this@AddDeckFragment.dismiss()
                 }
                 is Resource.Loading -> {
@@ -81,11 +82,6 @@ class AddDeckFragment : DialogFragment() {
                 }
             }
         })
-    }
-
-    override fun onDismiss(dialog: DialogInterface?) {
-        binding.root.hideSoftInput()
-        super.onDismiss(dialog)
     }
 
 }

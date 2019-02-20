@@ -15,7 +15,7 @@
                   type="br.com.spellnet.entity.CardQuantity"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="8dp"
@@ -112,5 +112,5 @@
                 tools:visibility="gone"
         />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

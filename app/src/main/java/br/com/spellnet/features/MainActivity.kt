@@ -2,7 +2,7 @@ package br.com.spellnet.features
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import br.com.spellnet.R
 import br.com.spellnet.features.decklist.view.DeckListFragment
 import com.crashlytics.android.Crashlytics

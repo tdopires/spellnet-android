@@ -7,7 +7,7 @@
                   type="br.com.spellnet.entity.Deck"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -38,5 +38,5 @@
               app:layout_constraintBottom_toBottomOf="@id/deck_info"
               android:background="@android:color/darker_gray"
         />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

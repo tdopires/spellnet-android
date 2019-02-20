@@ -1,10 +1,10 @@
 package br.com.spellnet.features.decklist.viewmodel
 
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import br.com.spellnet.entity.Deck
 import br.com.spellnet.model.decklist.DeckBusiness
-import com.example.android.architecture.blueprints.todoapp.SingleLiveEvent
+import br.com.spellnet.commom.SingleLiveEvent
 
 class DeckListViewModel(private val deckBusiness: DeckBusiness) : ViewModel() {
 

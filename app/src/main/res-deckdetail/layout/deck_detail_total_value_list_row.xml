@@ -7,7 +7,7 @@
                   type="double"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#cacaca"
@@ -37,6 +37,6 @@
                 android:text="@{String.format(`%.2f`, deckTotalValue)}"
         />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

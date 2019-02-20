@@ -1,8 +1,8 @@
 package br.com.spellnet.features.decklist.viewmodel
 
-import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import br.com.spellnet.features.decklist.view.AddDeckForm
 import br.com.spellnet.features.decklist.view.toDeckImport
 import br.com.spellnet.model.decklist.DeckBusiness

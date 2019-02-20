@@ -1,6 +1,6 @@
 package br.com.spellnet.features.deckdetail.viewmodel
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import br.com.spellnet.commom.LiveDataResource
 import br.com.spellnet.entity.*
 import br.com.spellnet.model.cardcollection.CardCollectionBusiness
