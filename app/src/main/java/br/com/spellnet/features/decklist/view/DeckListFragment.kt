@@ -37,8 +37,6 @@ class DeckListFragment : Fragment() {
         binding = DeckListFragmentBinding.inflate(inflater, container, false)
         bindViewComponents()
         bindToViewModel()
-
-        handleDeckUrlToImport()
         return binding.root
     }
 

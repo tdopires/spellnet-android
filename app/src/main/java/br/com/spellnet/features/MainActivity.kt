@@ -16,7 +16,9 @@ class MainActivity : AppCompatActivity() {
         Fabric.with(this, Crashlytics())
         setContentView(R.layout.main_activity)
 
-        handleDeckUrlIntentAndStartDeckListFragment(intent)
+        if (savedInstanceState == null) {
+            handleDeckUrlIntentAndStartDeckListFragment(intent)
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {

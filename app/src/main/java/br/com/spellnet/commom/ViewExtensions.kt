@@ -15,12 +15,12 @@ fun View.show() {
 fun View.showSoftInput() {
     this.requestFocus()
     val imm = this.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
 }
 
 fun View.hideSoftInput() {
     this.clearFocus()
     val imm = this.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.hideSoftInputFromWindow(this.windowToken, 0);
+    imm.hideSoftInputFromWindow(this.windowToken, 0)
 
 }
