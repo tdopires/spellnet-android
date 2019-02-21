@@ -7,12 +7,12 @@ import br.com.spellnet.database.entity.CardEntity
 @Dao
 interface CardCollectionDao {
 
-    @Query("SELECT * FROM card_collection_quantity")
+    @Query("SELECT * FROM collection_card_quantity")
     fun getAllCardQuantities(): List<CardCollectionQuantityEntity>
 
     @Query(
         "SELECT ccq.* " +
-                "FROM card_collection_quantity ccq " +
+                "FROM collection_card_quantity ccq " +
                 "INNER JOIN card c ON c.id = ccq.card_id WHERE lower(c.name) = lower(:cardName) " +
                 "LIMIT 1"
     )

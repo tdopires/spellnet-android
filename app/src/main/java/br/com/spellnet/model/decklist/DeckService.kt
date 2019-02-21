@@ -23,7 +23,7 @@ class DeckService(private val deckParser: DeckParser) {
             if (response.isSuccessful) {
                 val deckResponseString = response.body()?.string()
 
-                Deck(deckImport.name, deckParser.parse(deckResponseString))
+                Deck(null, deckImport.name, deckImport.url, deckParser.parse(deckResponseString))
             } else null
         } catch (e: DeckParseException) {
             null

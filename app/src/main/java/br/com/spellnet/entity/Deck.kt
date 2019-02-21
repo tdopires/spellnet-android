@@ -6,7 +6,8 @@ import kotlinx.android.parcel.Parcelize
 data class DeckImport(val name: String, val url: String)
 
 @Parcelize
-data class Deck(val name: String, val sections: List<DeckSection>) : Parcelable
+data class Deck(var entityId: Long? = null, val name: String, val importUrl: String, val sections: List<DeckSection>) :
+    Parcelable
 
 @Parcelize
 data class DeckSection(val title: String, val cardList: List<CardQuantity>) : Parcelable

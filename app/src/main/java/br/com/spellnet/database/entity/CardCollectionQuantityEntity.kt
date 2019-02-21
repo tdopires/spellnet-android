@@ -4,12 +4,12 @@ import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
 
 @Entity(
-    tableName = "card_collection_quantity",
+    tableName = "collection_card_quantity",
     foreignKeys = [
         ForeignKey(
             entity = CardEntity::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("card_id"),
+            parentColumns = ["id"],
+            childColumns = ["card_id"],
             onDelete = CASCADE
         )
     ],

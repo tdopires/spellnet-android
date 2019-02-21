@@ -1,16 +1,13 @@
 package br.com.spellnet.database.entity
 
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "card",
-    indices = [
-        Index("name", unique = true)
-    ]
+    tableName = "deck"
 )
-data class CardEntity(
+data class DeckEntity(
     @PrimaryKey(autoGenerate = true) var id: Long = 0,
-    val name: String
+    val name: String,
+    val importUrl: String
 )
