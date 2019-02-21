@@ -1,9 +1,6 @@
 package br.com.spellnet.database.entity
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 @Entity(
     tableName = "deck_section",
@@ -14,6 +11,9 @@ import androidx.room.PrimaryKey
             childColumns = ["deck_id"],
             onDelete = ForeignKey.CASCADE
         )
+    ],
+    indices = [
+        Index("deck_id")
     ]
 )
 data class DeckSectionEntity(

@@ -19,7 +19,8 @@ import androidx.room.*
         )
     ],
     indices = [
-        Index(value = ["card_id", "deck_section_id"], unique = true)
+        Index(value = ["card_id", "deck_section_id"], unique = true),
+        Index("deck_section_id")
     ]
 )
 data class DeckCardQuantityEntity(

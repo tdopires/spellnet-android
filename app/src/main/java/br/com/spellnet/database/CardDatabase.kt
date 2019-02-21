@@ -6,7 +6,7 @@ import br.com.spellnet.database.dao.CardCollectionDao
 import br.com.spellnet.database.dao.DeckDao
 import br.com.spellnet.database.entity.*
 
-const val CARD_DATABASE_VERSION = 2
+const val CARD_DATABASE_VERSION = 3
 
 @Database(
     entities = [
