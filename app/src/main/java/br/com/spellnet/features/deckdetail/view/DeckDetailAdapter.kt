@@ -1,16 +1,17 @@
 package br.com.spellnet.features.deckdetail.view
 
 import android.app.AlertDialog
-import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.RecyclerView
+import android.graphics.Paint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
 import br.com.spellnet.R
 import br.com.spellnet.commom.Resource
 import br.com.spellnet.databinding.DeckDetailCardPricingListRowBinding
-import br.com.spellnet.databinding.DeckDetailNameListRowBinding
+import br.com.spellnet.databinding.DeckDetailHeaderListRowBinding
 import br.com.spellnet.databinding.DeckDetailSectionTitleListRowBinding
 import br.com.spellnet.databinding.DeckDetailTotalValueListRowBinding
 import br.com.spellnet.entity.Card
@@ -18,9 +19,8 @@ import br.com.spellnet.entity.CardPricing
 import br.com.spellnet.entity.CardQuantity
 import br.com.spellnet.entity.Deck
 
-
 private const val CARD_VIEW_ITEM = 0
-private const val NAME_VIEW_ITEM = 1
+private const val HEADER_VIEW_ITEM = 1
 private const val SECTION_TITLE_VIEW_ITEM = 2
 private const val TOTAL_VALUE_VIEW_ITEM = 3
 
@@ -28,11 +28,12 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
 
     private val viewItems = mutableListOf<ViewItem>()
 
+    var onDeckImportUrlClickListener: ((String) -> Unit)? = null
     var onCardPricingRetryClickListener: ((Card) -> Unit)? = null
     var onHaveCardQuantityChangedListener: ((CardQuantity) -> Unit)? = null
 
     sealed class ViewItem {
-        class NameViewItem(val deckName: String) : ViewItem()
+        class HeaderViewItem(val deckName: String, val deckImportUrl: String) : ViewItem()
         class SectionTitleViewItem(val sectionTitle: String) : ViewItem()
         class CardViewItem(
             val cardQuantity: CardQuantity,
@@ -44,7 +45,7 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     init {
-        viewItems.add(ViewItem.NameViewItem(deck.name))
+        viewItems.add(ViewItem.HeaderViewItem(deck.name, deck.importUrl))
         deck.sections.forEach {
             viewItems.add(ViewItem.SectionTitleViewItem(it.title))
             it.cardList.forEach {
@@ -58,7 +59,7 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
 
     override fun getItemViewType(position: Int): Int {
         return when (viewItems[position]) {
-            is ViewItem.NameViewItem -> NAME_VIEW_ITEM
+            is ViewItem.HeaderViewItem -> HEADER_VIEW_ITEM
             is ViewItem.SectionTitleViewItem -> SECTION_TITLE_VIEW_ITEM
             is ViewItem.CardViewItem -> CARD_VIEW_ITEM
             is ViewItem.TotalValueViewItem -> TOTAL_VALUE_VIEW_ITEM
@@ -67,9 +68,9 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            NAME_VIEW_ITEM -> NameViewHolder(
+            HEADER_VIEW_ITEM -> HeaderViewHolder(
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.deck_detail_name_list_row, parent, false)
+                    .inflate(R.layout.deck_detail_header_list_row, parent, false)
             )
             SECTION_TITLE_VIEW_ITEM -> SectionTitleViewHolder(
                 LayoutInflater.from(parent.context)
@@ -93,9 +94,15 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val viewItem = viewItems[position]
         when {
-            holder is NameViewHolder && viewItem is ViewItem.NameViewItem -> {
+            holder is HeaderViewHolder && viewItem is ViewItem.HeaderViewItem -> {
                 holder.binding?.let {
                     it.deckName = viewItem.deckName
+                    it.deckImportUrl = viewItem.deckImportUrl
+
+                    it.deckHeaderImportUrl.paintFlags = it.deckHeaderImportUrl.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                    it.deckHeaderImportUrl.setOnClickListener {
+                        onDeckImportUrlClickListener?.invoke(viewItem.deckImportUrl)
+                    }
                     it.executePendingBindings()
                 }
 
@@ -250,8 +257,8 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
         updateDeckTotalValue()
     }
 
-    class NameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val binding: DeckDetailNameListRowBinding? = DataBindingUtil.bind(itemView)
+    class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val binding: DeckDetailHeaderListRowBinding? = DataBindingUtil.bind(itemView)
     }
 
     class SectionTitleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

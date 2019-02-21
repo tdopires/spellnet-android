@@ -8,5 +8,5 @@ class AddDeckForm(val name: String?, val url: String?)
 
 fun AddDeckForm.toDeckImport() =
     safeLet(this.name, this.url) { name, url ->
-        DeckImport(name, url)
+        DeckImport(if (name.isBlank()) "(untitled)" else name, url)
     }

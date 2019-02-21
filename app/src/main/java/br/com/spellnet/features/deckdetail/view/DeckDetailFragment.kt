@@ -1,11 +1,13 @@
 package br.com.spellnet.features.deckdetail.view
 
-import androidx.lifecycle.Observer
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import br.com.spellnet.commom.Resource
 import br.com.spellnet.commom.safeLet
 import br.com.spellnet.databinding.DeckDetailFragmentBinding
@@ -48,6 +50,11 @@ class DeckDetailFragment : Fragment() {
 
     private fun bindViewComponents(deck: Deck) {
         deckDetailAdapter = DeckDetailAdapter(deck).apply {
+            onDeckImportUrlClickListener = { deckImportUrl ->
+                val uri = Uri.parse(deckImportUrl)
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                startActivity(intent)
+            }
             onCardPricingRetryClickListener = { card ->
                 deckDetailsViewModel.retryFetchCardPricing(card)
                     .observe(this@DeckDetailFragment, Observer { resource ->
