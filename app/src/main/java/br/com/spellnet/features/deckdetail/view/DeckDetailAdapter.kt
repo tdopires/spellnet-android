@@ -18,6 +18,8 @@ import br.com.spellnet.entity.Card
 import br.com.spellnet.entity.CardPricing
 import br.com.spellnet.entity.CardQuantity
 import br.com.spellnet.entity.Deck
+import br.com.spellnet.commom.vibrateDefault
+
 
 private const val CARD_VIEW_ITEM = 0
 private const val HEADER_VIEW_ITEM = 1
@@ -29,6 +31,7 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
     private val viewItems = mutableListOf<ViewItem>()
 
     var onDeckImportUrlClickListener: ((String) -> Unit)? = null
+    var onCardPreviewClickListener: ((Card) -> Unit)? = null
     var onCardPricingRetryClickListener: ((Card) -> Unit)? = null
     var onHaveCardQuantityChangedListener: ((CardQuantity) -> Unit)? = null
 
@@ -137,10 +140,20 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
                 val viewItem = viewItems[viewHolder.adapterPosition] as ViewItem.CardViewItem
 
                 if (viewItem.resourceCardPricing is Resource.Success) {
-                    toggleCardHaveQuantity(viewItem)
+                    onCardPreviewClickListener?.invoke(viewItem.cardQuantity.card)
                 } else {
                     onCardPricingRetryClickListener?.invoke(viewItem.cardQuantity.card)
                 }
+            }
+            binding.root.setOnLongClickListener {
+                if (viewHolder.adapterPosition < 0) return@setOnLongClickListener false
+                val viewItem = viewItems[viewHolder.adapterPosition] as ViewItem.CardViewItem
+
+                if (viewItem.resourceCardPricing is Resource.Success) {
+                    toggleCardHaveQuantity(viewItem)
+                    binding.root.vibrateDefault()
+                }
+                return@setOnLongClickListener true
             }
 
             binding.buttonHaveCardQuantity.setOnClickListener {

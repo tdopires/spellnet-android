@@ -55,6 +55,11 @@ class DeckDetailFragment : Fragment() {
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 startActivity(intent)
             }
+            onCardPreviewClickListener = { card ->
+                val uri = Uri.parse("https://ligamagic.com.br/?view=cards/card&card=${card.name}")
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                startActivity(intent)
+            }
             onCardPricingRetryClickListener = { card ->
                 deckDetailsViewModel.retryFetchCardPricing(card)
                     .observe(this@DeckDetailFragment, Observer { resource ->
