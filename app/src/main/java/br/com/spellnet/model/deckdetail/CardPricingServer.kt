@@ -15,7 +15,7 @@ object CardPricingServer {
 
     val retrofit: Retrofit = Retrofit.Builder()
         .client(BaseServer.buildOkHttpClient())
-        .baseUrl("http://3.88.16.63:3000/") //TODO let user change this for webserver flexibilization
+        .baseUrl("http://3.93.71.162:3000/") //TODO let user change this for webserver flexibilization
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 
