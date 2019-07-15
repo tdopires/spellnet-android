@@ -4,6 +4,7 @@ import br.com.spellnet.commom.safeLet
 import br.com.spellnet.entity.Card
 import br.com.spellnet.entity.CardPricing
 import java.math.BigDecimal
+import java.util.*
 
 data class CardPricingResponse(val data: CardPricingResponseData, val status: String)
 
@@ -41,6 +42,11 @@ fun CardPricingResponse.toCardPricing(card: Card): CardPricing? {
         } ?: run { null }
     } else null
 
-    val cardPrices: List<List<String>> = data.prices.values.map { it.BRL }.toList()
+    val invalidEditions = listOf("wcd")
+    val isValidEdition: (String) -> Boolean = { edition ->
+        invalidEditions.contains(edition.toLowerCase(Locale.US)).not()
+    }
+
+    val cardPrices: List<List<String>> = data.prices.filterKeys(isValidEdition).values.map { it.BRL }.toList()
     return cardPrices.map { it.toCardPrices() }.filterNotNull().sortedBy { it.minPrice }.firstOrNull()
 }

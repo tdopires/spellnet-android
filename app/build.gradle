@@ -9,6 +9,10 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 android {
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "br.com.spellnet"

@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import br.com.spellnet.R
 import br.com.spellnet.commom.Resource
+import br.com.spellnet.commom.vibrateDefault
 import br.com.spellnet.databinding.DeckDetailCardPricingListRowBinding
 import br.com.spellnet.databinding.DeckDetailHeaderListRowBinding
 import br.com.spellnet.databinding.DeckDetailSectionTitleListRowBinding
@@ -18,7 +19,6 @@ import br.com.spellnet.entity.Card
 import br.com.spellnet.entity.CardPricing
 import br.com.spellnet.entity.CardQuantity
 import br.com.spellnet.entity.Deck
-import br.com.spellnet.commom.vibrateDefault
 
 
 private const val CARD_VIEW_ITEM = 0
@@ -44,7 +44,7 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
             var resourceCardPricing: Resource<CardPricing> = Resource.Loading()
         ) : ViewItem()
 
-        class TotalValueViewItem(var deckTotalValue: Double = 0.0) : ViewItem()
+        class TotalValueViewItem(var deckRemainingValue: Double = 0.0, var deckTotalValue: Double = 0.0) : ViewItem()
     }
 
     init {
@@ -127,6 +127,7 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
             holder is TotalValueViewHolder && viewItem is ViewItem.TotalValueViewItem -> {
                 holder.binding?.let {
                     it.deckTotalValue = viewItem.deckTotalValue
+                    it.deckRemainingValue = viewItem.deckRemainingValue
                     it.executePendingBindings()
                 }
             }
@@ -238,21 +239,26 @@ class DeckDetailAdapter(deck: Deck) : RecyclerView.Adapter<RecyclerView.ViewHold
     private fun updateDeckTotalValue() {
         val indexOfTotalValue = viewItems.size - 1
         if (viewItems[indexOfTotalValue] is ViewItem.TotalValueViewItem) {
-            (viewItems[indexOfTotalValue] as ViewItem.TotalValueViewItem).deckTotalValue =
-                viewItems.filter { it is ViewItem.CardViewItem }
-                    .map {
-                        val cardViewItem = (it as ViewItem.CardViewItem)
-                        val cardViewItemCardPricing = cardViewItem.resourceCardPricing
-                        if (cardViewItemCardPricing is Resource.Success) {
-                            cardViewItemCardPricing.data.minPrice?.let { cardPricingMinPrice ->
+            val totalPriceResults = viewItems.filter { it is ViewItem.CardViewItem }
+                .map {
+                    val cardViewItem = (it as ViewItem.CardViewItem)
+                    val cardViewItemCardPricing = cardViewItem.resourceCardPricing
+                    if (cardViewItemCardPricing is Resource.Success) {
+                        cardViewItemCardPricing.data.minPrice?.let { cardPricingMinPrice ->
+                            Pair(
                                 Math.max(
                                     0,
                                     cardViewItem.cardQuantity.quantity - (cardViewItem.haveCardQuantity?.quantity ?: 0)
-                                ).toDouble() * cardPricingMinPrice.toDouble()
-                            } ?: run { 0.0 }
-                        } else 0.0
-
-                    }.sum()
+                                ).toDouble() * cardPricingMinPrice.toDouble(),
+                                cardViewItem.cardQuantity.quantity.toDouble() * cardPricingMinPrice.toDouble()
+                            )
+                        } ?: run { Pair(0.0, 0.0) }
+                    } else Pair(0.0, 0.0)
+                }.reduce { acc, pair ->
+                    Pair(acc.first + pair.first, acc.second + pair.second)
+                }
+            (viewItems[indexOfTotalValue] as ViewItem.TotalValueViewItem).deckRemainingValue = totalPriceResults.first
+            (viewItems[indexOfTotalValue] as ViewItem.TotalValueViewItem).deckTotalValue = totalPriceResults.second
             notifyItemChanged(indexOfTotalValue)
         }
     }

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
 >
 
     <data>
+        <variable name="deckRemainingValue"
+                  type="double"/>
         <variable name="deckTotalValue"
                   type="double"/>
     </data>
@@ -15,26 +18,68 @@
             android:paddingBottom="24dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            >
+    >
 
         <TextView
+                android:id="@+id/deck_remaining_value_label_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
+                android:text="Total (want list)"
+        />
+
+        <TextView
+                android:id="@+id/deck_total_value_label_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/deck_remaining_value_label_text"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textSize="16sp"
+                android:textStyle="italic"
                 android:text="Total"
+                android:layout_marginTop="12dp"
+        />
+
+        <TextView
+                android:id="@+id/deck_remaining_value_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="@{String.format(`%.2f`, deckRemainingValue)}"
+                tools:text="40.00"
+        />
+
+        <TextView
+                android:id="@+id/deck_total_value_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/deck_remaining_value_text"
+                app:layout_constraintRight_toRightOf="parent"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                android:text="@{String.format(`%.2f`, deckTotalValue)}"
+                android:layout_marginTop="12dp"
+                tools:text="100.00"
         />
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/deck_total_value_text"
                 app:layout_constraintRight_toRightOf="parent"
-                android:textSize="24sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:text="@{String.format(`%.2f`, deckTotalValue)}"
+                android:textColor="@color/colorAccent"
+                android:text="@{String.format(`Deck Completion: %.1f %%`, ((deckTotalValue - deckRemainingValue) / deckTotalValue) * 100)}"
+                android:layout_marginTop="12dp"
+                tools:text="Deck Completion: 60.0 %"
         />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

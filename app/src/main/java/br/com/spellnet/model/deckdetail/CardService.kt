@@ -28,7 +28,11 @@ class CardService {
             try {
                 val response = cardPricingService.getCardPricing(card.name).execute()
                 if (response.isSuccessful) {
-                    response.body()?.toCardPricing(card)
+                    response.body()?.let {
+                        if (it.status == "ok") {
+                            it.toCardPricing(card)
+                        } else null
+                    }
                 } else null
             } catch (e: IOException) {
                 null

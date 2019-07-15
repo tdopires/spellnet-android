@@ -3,8 +3,6 @@ package br.com.spellnet.model.decklist
 import br.com.spellnet.entity.Card
 import br.com.spellnet.entity.CardQuantity
 import br.com.spellnet.entity.DeckSection
-import java.lang.Exception
-import java.lang.StringBuilder
 
 class DeckParser {
 
@@ -56,7 +54,7 @@ class DeckParser {
     }
 
     private fun normalizeDecFileStrings(deckString: String): String {
-        val deckLines = if (deckString[deckString.length-1] == '\n') {
+        val deckLines = if (deckString[deckString.length - 1] == '\n') {
             deckString.substring(0, deckString.length - 1)
         } else {
             deckString
@@ -68,7 +66,7 @@ class DeckParser {
             if (it.startsWith("//")) {
                 return@forEach
             }
-            val cardNameWithoutEdition = it.replace(Regex("""(\[.*\])"""), "")
+            val cardNameWithoutEdition = it.replace(Regex("""(\[.*\])"""), "").replace("/", " // ")
 
             if ((cardNameWithoutEdition.startsWith("SB:")) && !changedDeckSection) {
                 changedDeckSection = true

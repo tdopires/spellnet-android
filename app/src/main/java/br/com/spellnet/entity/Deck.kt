@@ -2,6 +2,7 @@ package br.com.spellnet.entity
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 data class DeckImport(val name: String, val url: String)
 
@@ -18,4 +19,4 @@ data class CardQuantity(val quantity: Int, val card: Card) : Parcelable
 // Helper extensions
 
 fun Deck.fullFlatCardsList(): List<Card> =
-    this.sections.flatMap { it.cardList.map { it.card } }.distinctBy { it.name.toLowerCase() }
+    this.sections.flatMap { it.cardList.map { it.card } }.distinctBy { it.name.toLowerCase(Locale.US) }
