@@ -46,6 +46,7 @@ class DeckParserTest {
         assertEquals(60, result[0].cardList.sumBy { it.quantity })
         assertEquals(15, result[1].cardList.sumBy { it.quantity })
         assertEquals(CardQuantity(3, Card("Arid Mesa")), result[0].cardList[0])
+        assertEquals(CardQuantity(4, Card("Goblin Guide")), result[0].cardList[4])
         assertEquals(CardQuantity(4, Card("Chained to the Rocks")), result[1].cardList[0])
     }
 
@@ -98,6 +99,40 @@ class DeckParserTest {
         assertEquals(15, result[1].cardList.sumBy { it.quantity })
         assertEquals(CardQuantity(4, Card("Noble Hierarch")), result[0].cardList[0])
         assertEquals(CardQuantity(1, Card("Surgical Extraction")), result[1].cardList[0])
+    }
+
+    @Test
+    fun testParse_withSomeMessedUpSplitInput_parseCorrectly() {
+        val result = deckParser.parse("3 Arid Mesa\n" +
+                "4 Bloodstained Mire\n" +
+                "4 Boros Charm\n" +
+                "4 Eidolon of the Great Revel\n" +
+                "2 Goblin Guide\n" +
+                "2 Goblin Guide\n" +
+                "4 Inspiring Vantage\n" +
+                "4 Lava Spike\n" +
+                "4 Lightning Bolt\n" +
+                "4 Lightning Helix\n" +
+                "4 Monastery Swiftspear\n" +
+                "3 Mountain\n" +
+                "4 Rift Bolt\n" +
+                "2 Sacred Foundry\n" +
+                "4 Searing Blaze\n" +
+                "4 Skullcrack\n" +
+                "4 Wooded Foothills\n" +
+                "\n" +
+                "1 Chained to the Rocks\n" +
+                "3 Chained to the Rocks\n" +
+                "3 Exquisite Firecraft\n" +
+                "4 Searing Blood\n" +
+                "4 Smash to Smithereens\n")
+
+        assertEquals(2, result.size)
+        assertEquals(60, result[0].cardList.sumBy { it.quantity })
+        assertEquals(15, result[1].cardList.sumBy { it.quantity })
+        assertEquals(CardQuantity(3, Card("Arid Mesa")), result[0].cardList[0])
+        assertEquals(CardQuantity(4, Card("Goblin Guide")), result[0].cardList[4])
+        assertEquals(CardQuantity(4, Card("Chained to the Rocks")), result[1].cardList[0])
     }
 
     @Test(expected = DeckParseException::class)

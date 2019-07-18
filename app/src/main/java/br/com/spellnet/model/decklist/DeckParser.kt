@@ -14,7 +14,7 @@ class DeckParser {
 
         val deckLines = normalizedDeckString.split("\n")
         val deckSections = mutableListOf<DeckSection>()
-        val currentSectionCards = mutableListOf<CardQuantity>()
+        val currentSectionCardQuantities = mutableMapOf<String, Int>()
         deckLines.forEach { line ->
             if (line.isNotBlank()) {
                 val numberRegex = Regex("([0-9]*)")
@@ -24,25 +24,33 @@ class DeckParser {
                     val cardName = line.replaceFirst(numberRegex, "").trim()
 
                     if (cardQuantity.toIntOrNull() != null) {
-                        currentSectionCards.add(
-                            CardQuantity(
-                                cardQuantity.toInt(),
-                                Card(cardName)
-                            )
-                        )
+                        currentSectionCardQuantities[cardName] =
+                            currentSectionCardQuantities.getOrElse(cardName) { 0 } + cardQuantity.toInt()
                     }
                 }
             } else {
+                val currentSectionCards = currentSectionCardQuantities.map {
+                    CardQuantity(
+                        it.value,
+                        Card(it.key)
+                    )
+                }.toList()
                 deckSections.add(
                     DeckSection(
                         buildDeckSectionTitleFor(currentSectionCards),
                         currentSectionCards.toList()
                     )
                 )
-                currentSectionCards.clear()
+                currentSectionCardQuantities.clear()
             }
         }
-        if (currentSectionCards.size > 0) {
+        if (currentSectionCardQuantities.isNotEmpty()) {
+            val currentSectionCards = currentSectionCardQuantities.map {
+                CardQuantity(
+                    it.value,
+                    Card(it.key)
+                )
+            }.toList()
             deckSections.add(
                 DeckSection(
                     buildDeckSectionTitleFor(currentSectionCards),
