@@ -2,15 +2,18 @@ package br.com.spellnet.features.decklist.viewmodel
 
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import br.com.spellnet.commom.SingleLiveEvent
 import br.com.spellnet.entity.Deck
 import br.com.spellnet.model.decklist.DeckBusiness
-import br.com.spellnet.commom.SingleLiveEvent
+import kotlinx.coroutines.launch
 
 class DeckListViewModel(private val deckBusiness: DeckBusiness) : ViewModel() {
 
     open class Action {
         class AddDeck(val deckUrlToImport: String?) : Action()
         class OpenDeck(val deck: Deck) : Action()
+        class DeleteDeck(val deck: Deck) : Action()
     }
 
     private val action = SingleLiveEvent<Action>()
@@ -30,6 +33,17 @@ class DeckListViewModel(private val deckBusiness: DeckBusiness) : ViewModel() {
 
     fun openDeck(deck: Deck) {
         action.value = Action.OpenDeck(deck)
+    }
+
+    fun deleteDeck(deck: Deck) {
+        action.value = Action.DeleteDeck(deck)
+    }
+
+    fun confirmDeleteDeck(deck: Deck) {
+        viewModelScope.launch {
+            deckBusiness.deleteDeck(deck)
+            retryDeckList.call()
+        }
     }
 
     fun action() = action

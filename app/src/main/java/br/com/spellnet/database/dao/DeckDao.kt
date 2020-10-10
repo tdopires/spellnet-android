@@ -1,9 +1,6 @@
 package br.com.spellnet.database.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room.*
 import br.com.spellnet.database.entity.CardEntity
 import br.com.spellnet.database.entity.DeckCardQuantityEntity
 import br.com.spellnet.database.entity.DeckEntity
@@ -65,4 +62,6 @@ interface DeckDao {
         return deckId
     }
 
+    @Query("DELETE FROM deck WHERE id = :deckId")
+    suspend fun deleteDeckById(deckId: Long)
 }

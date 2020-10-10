@@ -1,11 +1,12 @@
 package br.com.spellnet.features.decklist.view
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import br.com.spellnet.R
 import br.com.spellnet.commom.Resource
 import br.com.spellnet.commom.hide
@@ -54,9 +55,14 @@ class DeckListFragment : Fragment() {
     }
 
     private fun bindViewComponents() {
-        deckListAdapter = DeckListAdapter(mutableListOf()) {
-            deckListViewModel.openDeck(it)
-        }
+        deckListAdapter = DeckListAdapter(mutableListOf(),
+            onClickListener = {
+                deckListViewModel.openDeck(it)
+            },
+            onLongClickListener = {
+                deckListViewModel.deleteDeck(it)
+            }
+        )
         binding.deckList.adapter = deckListAdapter
 
         binding.addDeckButton.setOnClickListener {
@@ -65,7 +71,7 @@ class DeckListFragment : Fragment() {
     }
 
     private fun bindToViewModel() {
-        deckListViewModel.action().observe(viewLifecycleOwner, Observer {
+        deckListViewModel.action().observe(viewLifecycleOwner, {
             when (it) {
                 is DeckListViewModel.Action.AddDeck -> {
                     openAddDeck(it.deckUrlToImport)
@@ -73,10 +79,13 @@ class DeckListFragment : Fragment() {
                 is DeckListViewModel.Action.OpenDeck -> {
                     openDeckDetails(it.deck)
                 }
+                is DeckListViewModel.Action.DeleteDeck -> {
+                    confirmDeckDeletion(it.deck)
+                }
             }
         })
 
-        deckListViewModel.deckList().observe(viewLifecycleOwner, Observer {
+        deckListViewModel.deckList().observe(viewLifecycleOwner, {
             when (it) {
                 is Resource.Success -> {
                     handleDeckList(it.data)
@@ -108,13 +117,30 @@ class DeckListFragment : Fragment() {
 
     private fun openDeckDetails(deck: Deck) {
         // TODO change to a centralized method
+        val deckDetailFragment = DeckDetailFragment.newInstance(deck)
         fragmentManager?.beginTransaction()
+            ?.setCustomAnimations(
+                R.anim.slide_in,
+                R.anim.slide_out,
+            )
             ?.replace(
                 R.id.container,
-                DeckDetailFragment.newInstance(deck),
+                deckDetailFragment,
                 DeckDetailFragment::class.java.simpleName
-            ) // Add this transaction to the back stack (name is an optional name for this back stack state, or null).
+            )
             ?.addToBackStack(null)
             ?.commit()
+    }
+
+    private fun confirmDeckDeletion(deck: Deck) {
+        AlertDialog.Builder(requireContext())
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle(R.string.delete_deck_alert_title)
+            .setMessage(resources.getString(R.string.delete_deck_alert_message, deck.name))
+            .setPositiveButton(R.string.yes) { _: DialogInterface, _: Int ->
+                deckListViewModel.confirmDeleteDeck(deck)
+            }
+            .setNegativeButton(R.string.no, null)
+            .show()
     }
 }

@@ -4,12 +4,16 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import br.com.spellnet.commom.Resource
+import br.com.spellnet.commom.hide
 import br.com.spellnet.commom.safeLet
+import br.com.spellnet.commom.show
 import br.com.spellnet.databinding.DeckDetailFragmentBinding
 import br.com.spellnet.entity.Card
 import br.com.spellnet.entity.CardPricing
@@ -45,11 +49,18 @@ class DeckDetailFragment : Fragment() {
         binding = DeckDetailFragmentBinding.inflate(inflater, container, false)
         deck?.let {
             bindViewComponents(it)
-            bindToViewModel(it)
+            bindToViewModel()
         } ?: run {
             fragmentManager?.popBackStackImmediate()
         }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        deck?.let {
+            deckDetailsViewModel.openDeck(it)
+        }
     }
 
     private fun bindViewComponents(deck: Deck) {
@@ -76,20 +87,44 @@ class DeckDetailFragment : Fragment() {
             }
         }
         binding.cardList.adapter = deckDetailAdapter
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setHasOptionsMenu(true)
     }
 
-    private fun bindToViewModel(deck: Deck) {
-        deckDetailsViewModel.openDeck(deck).map { cardEntry ->
-            val (haveCardQuantity, resourceCardPricing) = cardEntry.value
-            resourceCardPricing.observe(viewLifecycleOwner, Observer { resource ->
-                handleCardPricingResource(cardEntry.key, resource)
-            })
-            haveCardQuantity.observe(viewLifecycleOwner, Observer {
-                if (it is Resource.Success) {
-                    deckDetailAdapter?.updateCardHaveQuantity(it.data)
-                }
-            })
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            fragmentManager?.popBackStack()
+            return true
         }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun bindToViewModel() {
+        deckDetailsViewModel.deck().observe(viewLifecycleOwner, { deckResource ->
+            when (deckResource) {
+                is Resource.Loading -> {
+                    binding.loading.show()
+                    binding.cardList.hide()
+                }
+                is Resource.Success -> {
+                    binding.loading.hide()
+                    binding.cardList.show()
+                    deckResource.data.map { cardEntry ->
+                        val (haveCardQuantity, resourceCardPricing) = cardEntry.value
+                        resourceCardPricing.observe(viewLifecycleOwner, { resource ->
+                            handleCardPricingResource(cardEntry.key, resource)
+                        })
+                        haveCardQuantity.observe(viewLifecycleOwner, {
+                            if (it is Resource.Success) {
+                                deckDetailAdapter?.updateCardHaveQuantity(it.data)
+                            }
+                        })
+                    }
+                }
+            }
+        })
     }
 
     private fun handleCardPricingResource(card: Card, resource: Resource<CardPricing>?) {

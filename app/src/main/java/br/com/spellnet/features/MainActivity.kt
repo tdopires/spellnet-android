@@ -2,6 +2,7 @@ package br.com.spellnet.features
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import br.com.spellnet.R
 import br.com.spellnet.features.decklist.view.DeckListFragment
@@ -33,5 +34,8 @@ class MainActivity : AppCompatActivity() {
             .commitNow()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
+    }
 
 }

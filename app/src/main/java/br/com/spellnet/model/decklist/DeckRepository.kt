@@ -44,5 +44,9 @@ class DeckRepository(private val deckService: DeckService, private val deckDao: 
         }
     }
 
-
+    suspend fun deleteDeck(deck: Deck) {
+        deck.entityId?.let {
+            deckDao.deleteDeckById(it)
+        }
+    }
 }

@@ -20,5 +20,8 @@ class DeckBusiness(private val deckRepository: DeckRepository) {
         }
     }
 
+    suspend fun deleteDeck(deck: Deck) {
+        deckRepository.deleteDeck(deck)
+    }
 }
 

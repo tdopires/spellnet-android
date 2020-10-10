@@ -4,4 +4,6 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class CardCollection(val haveList: List<CardQuantity>) : Parcelable
+data class CardCollection(
+    val haveList: List<CardQuantity>
+) : Parcelable
