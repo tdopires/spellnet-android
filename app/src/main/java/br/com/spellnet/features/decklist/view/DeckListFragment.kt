@@ -1,20 +1,20 @@
 package br.com.spellnet.features.decklist.view
 
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import br.com.spellnet.R
 import br.com.spellnet.commom.Resource
 import br.com.spellnet.commom.hide
 import br.com.spellnet.commom.show
 import br.com.spellnet.databinding.DeckListFragmentBinding
+import br.com.spellnet.entity.Deck
 import br.com.spellnet.features.deckdetail.view.DeckDetailFragment
 import br.com.spellnet.features.decklist.viewmodel.DeckListViewModel
-import br.com.spellnet.entity.Deck
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DeckListFragment : Fragment() {
 
@@ -28,12 +28,16 @@ class DeckListFragment : Fragment() {
         }
     }
 
-    private val deckListViewModel : DeckListViewModel by viewModel()
+    private val deckListViewModel: DeckListViewModel by viewModel()
 
     private lateinit var binding: DeckListFragmentBinding
     private var deckListAdapter: DeckListAdapter? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = DeckListFragmentBinding.inflate(inflater, container, false)
         bindViewComponents()
         bindToViewModel()
@@ -61,8 +65,8 @@ class DeckListFragment : Fragment() {
     }
 
     private fun bindToViewModel() {
-        deckListViewModel.action().observe(this, Observer {
-            when(it) {
+        deckListViewModel.action().observe(viewLifecycleOwner, Observer {
+            when (it) {
                 is DeckListViewModel.Action.AddDeck -> {
                     openAddDeck(it.deckUrlToImport)
                 }
@@ -72,7 +76,7 @@ class DeckListFragment : Fragment() {
             }
         })
 
-        deckListViewModel.deckList().observe(this, Observer {
+        deckListViewModel.deckList().observe(viewLifecycleOwner, Observer {
             when (it) {
                 is Resource.Success -> {
                     handleDeckList(it.data)
@@ -93,18 +97,23 @@ class DeckListFragment : Fragment() {
     }
 
     private fun openAddDeck(deckUrlToImport: String?) {
-        val addDeckFragment = AddDeckFragment.newInstance(deckUrlToImport, object : AddDeckResultListener {
-            override fun onDeckSaved(deck: Deck) {
-                deckListViewModel.retryDeckList()
-            }
-        })
+        val addDeckFragment =
+            AddDeckFragment.newInstance(deckUrlToImport, object : AddDeckResultListener {
+                override fun onDeckSaved(deck: Deck) {
+                    deckListViewModel.retryDeckList()
+                }
+            })
         addDeckFragment.show(requireFragmentManager(), addDeckFragment::javaClass.name)
     }
 
     private fun openDeckDetails(deck: Deck) {
         // TODO change to a centralized method
         fragmentManager?.beginTransaction()
-            ?.replace(R.id.container, DeckDetailFragment.newInstance(deck), DeckDetailFragment::class.java.simpleName) // Add this transaction to the back stack (name is an optional name for this back stack state, or null).
+            ?.replace(
+                R.id.container,
+                DeckDetailFragment.newInstance(deck),
+                DeckDetailFragment::class.java.simpleName
+            ) // Add this transaction to the back stack (name is an optional name for this back stack state, or null).
             ?.addToBackStack(null)
             ?.commit()
     }

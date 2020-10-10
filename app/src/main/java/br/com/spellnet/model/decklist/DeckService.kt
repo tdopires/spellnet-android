@@ -3,12 +3,10 @@ package br.com.spellnet.model.decklist
 import br.com.spellnet.commom.BaseServer
 import br.com.spellnet.entity.Deck
 import br.com.spellnet.entity.DeckImport
-import com.crashlytics.android.Crashlytics
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
 import java.io.IOException
-import java.util.Date
 
 
 class DeckService(private val deckParser: DeckParser) {
@@ -17,7 +15,6 @@ class DeckService(private val deckParser: DeckParser) {
         val client = BaseServer.buildOkHttpClient()
 
         try {
-            Crashlytics.setString("deck url ${Date()}", deckImport.url)
             val request = Request.Builder()
                 .url(deckImport.url)
                 .build()

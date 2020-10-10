@@ -15,8 +15,8 @@ import br.com.spellnet.model.decklist.DeckParser
 import br.com.spellnet.model.decklist.DeckRepository
 import br.com.spellnet.model.decklist.DeckService
 import org.koin.android.ext.koin.androidContext
-import org.koin.android.viewmodel.ext.koin.viewModel
-import org.koin.dsl.module.module
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 
 //TODO change to multiple modules later
 val module = module {

@@ -15,7 +15,7 @@ import br.com.spellnet.entity.Card
 import br.com.spellnet.entity.CardPricing
 import br.com.spellnet.entity.Deck
 import br.com.spellnet.features.deckdetail.viewmodel.DeckDetailViewModel
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DeckDetailFragment : Fragment() {
 
@@ -37,7 +37,11 @@ class DeckDetailFragment : Fragment() {
 
     private val deck by lazy { this.arguments?.getParcelable(KEY_ARGS_DECK) as Deck? }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = DeckDetailFragmentBinding.inflate(inflater, container, false)
         deck?.let {
             bindViewComponents(it)
@@ -62,7 +66,7 @@ class DeckDetailFragment : Fragment() {
             }
             onCardPricingRetryClickListener = { card ->
                 deckDetailsViewModel.retryFetchCardPricing(card)
-                    .observe(this@DeckDetailFragment, Observer { resource ->
+                    .observe(viewLifecycleOwner, Observer { resource ->
                         handleCardPricingResource(card, resource)
                     })
             }
@@ -77,10 +81,10 @@ class DeckDetailFragment : Fragment() {
     private fun bindToViewModel(deck: Deck) {
         deckDetailsViewModel.openDeck(deck).map { cardEntry ->
             val (haveCardQuantity, resourceCardPricing) = cardEntry.value
-            resourceCardPricing.observe(this, Observer { resource ->
+            resourceCardPricing.observe(viewLifecycleOwner, Observer { resource ->
                 handleCardPricingResource(cardEntry.key, resource)
             })
-            haveCardQuantity.observe(this, Observer {
+            haveCardQuantity.observe(viewLifecycleOwner, Observer {
                 if (it is Resource.Success) {
                     deckDetailAdapter?.updateCardHaveQuantity(it.data)
                 }

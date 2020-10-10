@@ -15,7 +15,7 @@ object CardPricingServer {
 
     val retrofit: Retrofit = Retrofit.Builder()
         .client(BaseServer.buildOkHttpClient())
-        .baseUrl("http://3.93.71.162:3000/") //TODO let user change this for webserver flexibilization
+        .baseUrl("https://spellnet.herokuapp.com/")
         .addConverterFactory(GsonConverterFactory.create(gson))
         .build()
 

@@ -2,7 +2,8 @@ package br.com.spellnet
 
 import android.app.Application
 import br.com.spellnet.di.spellnetApp
-import org.koin.android.ext.android.startKoin
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class MainApplication : Application() {
 
@@ -10,6 +11,11 @@ class MainApplication : Application() {
         super.onCreate()
 
         // start Koin context
-        startKoin(this, spellnetApp)
+        startKoin {
+            // Android context
+            androidContext(this@MainApplication)
+            // modules
+            modules(spellnetApp)
+        }
     }
 }
