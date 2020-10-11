@@ -20,3 +20,8 @@ A simple mobile app to check paper MtG prices in BRL currency (Android only for 
 ## Early Access
 
 Contact me and I'll include you on as a tester on my Firebase App Distribution
+
+Warnings:
+- Google Play Protect will warn you about installing the app, but don't worry
+- There's still a lot of bugs (some new cards keeps getting an error)
+- The backend server is deployed on Heroku, so the dynos might sleep sometimes
