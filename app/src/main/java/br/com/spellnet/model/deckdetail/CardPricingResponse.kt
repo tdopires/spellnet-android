@@ -42,7 +42,7 @@ fun CardPricingResponse.toCardPricing(card: Card): CardPricing? {
         } ?: run { null }
     } else null
 
-    val invalidEditions = listOf("wcd")
+    val invalidEditions = listOf("world championship decks")
     val isValidEdition: (String) -> Boolean = { edition ->
         invalidEditions.contains(edition.toLowerCase(Locale.US)).not()
     }
