@@ -5,6 +5,7 @@ import br.com.spellnet.database.CardDatabase
 import br.com.spellnet.features.deckdetail.viewmodel.DeckDetailViewModel
 import br.com.spellnet.features.decklist.viewmodel.AddDeckViewModel
 import br.com.spellnet.features.decklist.viewmodel.DeckListViewModel
+import br.com.spellnet.features.menu.MenuViewModel
 import br.com.spellnet.model.cardcollection.CardCollectionBusiness
 import br.com.spellnet.model.cardcollection.CardCollectionRepository
 import br.com.spellnet.model.deckdetail.CardBusiness
@@ -23,13 +24,14 @@ val module = module {
     viewModel { DeckListViewModel(get()) }
     viewModel { AddDeckViewModel(get()) }
     viewModel { DeckDetailViewModel(get(), get()) }
+    viewModel { MenuViewModel(get()) }
 
     factory { DeckBusiness(get()) }
     factory { CardBusiness(get()) }
     factory { CardCollectionBusiness(get()) }
 
     factory { DeckRepository(get(), get()) }
-    factory { CardRepository(get()) }
+    factory { CardRepository(get(), get()) }
     factory { CardCollectionRepository(get()) }
 
     factory { DeckService(get()) }
@@ -46,6 +48,7 @@ val module = module {
 
     single { get<CardDatabase>().cardCollectionDao() }
     single { get<CardDatabase>().deckDao() }
+    single { get<CardDatabase>().cardPriceCacheDao() }
 }
 
 // Gather all app modules

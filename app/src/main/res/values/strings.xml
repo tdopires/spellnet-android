@@ -11,4 +11,6 @@
 
     <string name="delete_deck_alert_title">Deleting Deck</string>
     <string name="delete_deck_alert_message" formatted="false">Are you sure you want to delete this deck?\n%s</string>
+
+    <string name="clear_card_price_cache">Clear Card Price\'s Cache</string>
 </resources>

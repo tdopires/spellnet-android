@@ -11,6 +11,12 @@ import br.com.spellnet.entity.Deck
 @Dao
 interface DeckDao {
 
+    @Query("SELECT * FROM card WHERE lower(name) = lower(:cardName) LIMIT 1")
+    fun getCardByCardName(cardName: String): CardEntity?
+
+    @Insert
+    fun insertCard(cardEntity: CardEntity): Long
+
     @Transaction
     @Query("SELECT * FROM deck")
     fun getAllDecks(): List<DeckAndSections>
@@ -23,12 +29,6 @@ interface DeckDao {
                 "WHERE d.id = :deckId"
     )
     fun getDeckCardQuantityByDeckId(deckId: Long): List<DeckCardQuantityEntity>
-
-    @Query("SELECT * FROM card WHERE lower(name) = lower(:cardName) LIMIT 1")
-    fun getCardByCardName(cardName: String): CardEntity?
-
-    @Insert
-    fun insertCard(cardEntity: CardEntity): Long
 
     @Insert
     fun insertDeckCardQuantity(deckCardQuantityEntity: DeckCardQuantityEntity): Long

@@ -1,0 +1,337 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 4,
+    "identityHash": "ad6ea4e84554f459eda5ea655544cab8",
+    "entities": [
+      {
+        "tableName": "card",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_card_name",
+            "unique": true,
+            "columnNames": [
+              "name"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_card_name` ON `${TABLE_NAME}` (`name`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "collection_card_quantity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `quantity` INTEGER NOT NULL, `card_id` INTEGER NOT NULL, FOREIGN KEY(`card_id`) REFERENCES `card`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "quantity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardId",
+            "columnName": "card_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_collection_card_quantity_card_id",
+            "unique": true,
+            "columnNames": [
+              "card_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_collection_card_quantity_card_id` ON `${TABLE_NAME}` (`card_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "card",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "card_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "deck",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `importUrl` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "importUrl",
+            "columnName": "importUrl",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "deck_section",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `deck_id` INTEGER NOT NULL, FOREIGN KEY(`deck_id`) REFERENCES `deck`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deckId",
+            "columnName": "deck_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_deck_section_deck_id",
+            "unique": false,
+            "columnNames": [
+              "deck_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_deck_section_deck_id` ON `${TABLE_NAME}` (`deck_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "deck",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "deck_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "deck_card_quantity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `quantity` INTEGER NOT NULL, `card_id` INTEGER NOT NULL, `deck_section_id` INTEGER NOT NULL, FOREIGN KEY(`card_id`) REFERENCES `card`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`deck_section_id`) REFERENCES `deck_section`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quantity",
+            "columnName": "quantity",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardId",
+            "columnName": "card_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "deckSectionId",
+            "columnName": "deck_section_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_deck_card_quantity_card_id_deck_section_id",
+            "unique": true,
+            "columnNames": [
+              "card_id",
+              "deck_section_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_deck_card_quantity_card_id_deck_section_id` ON `${TABLE_NAME}` (`card_id`, `deck_section_id`)"
+          },
+          {
+            "name": "index_deck_card_quantity_deck_section_id",
+            "unique": false,
+            "columnNames": [
+              "deck_section_id"
+            ],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_deck_card_quantity_deck_section_id` ON `${TABLE_NAME}` (`deck_section_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "card",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "card_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "deck_section",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "deck_section_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "card_price_cache",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `card_id` INTEGER NOT NULL, `minPrice` REAL, `midPrice` REAL, `maxPrice` REAL, `lastUpdated` INTEGER NOT NULL, FOREIGN KEY(`card_id`) REFERENCES `card`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cardId",
+            "columnName": "card_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "minPrice",
+            "columnName": "minPrice",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "midPrice",
+            "columnName": "midPrice",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "maxPrice",
+            "columnName": "maxPrice",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastUpdated",
+            "columnName": "lastUpdated",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_card_price_cache_card_id",
+            "unique": true,
+            "columnNames": [
+              "card_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_card_price_cache_card_id` ON `${TABLE_NAME}` (`card_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "card",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "card_id"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ad6ea4e84554f459eda5ea655544cab8')"
+    ]
+  }
+}

@@ -7,6 +7,12 @@ import br.com.spellnet.database.entity.CardEntity
 @Dao
 interface CardCollectionDao {
 
+    @Query("SELECT * FROM card WHERE lower(name) = lower(:cardName) LIMIT 1")
+    fun getCardByCardName(cardName: String): CardEntity?
+
+    @Insert
+    fun insertCard(cardEntity: CardEntity): Long
+
     @Query("SELECT * FROM collection_card_quantity")
     fun getAllCardQuantities(): List<CardCollectionQuantityEntity>
 
@@ -17,12 +23,6 @@ interface CardCollectionDao {
                 "LIMIT 1"
     )
     fun getCardQuantityByCardName(cardName: String): CardCollectionQuantityEntity?
-
-    @Query("SELECT * FROM card WHERE lower(name) = lower(:cardName) LIMIT 1")
-    fun getCardByCardName(cardName: String): CardEntity?
-
-    @Insert
-    fun insertCard(cardEntity: CardEntity): Long
 
     @Insert
     fun insertCardCollectionQuantity(cardCollectionQuantityEntity: CardCollectionQuantityEntity)

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -88,17 +89,36 @@ class DeckDetailFragment : Fragment() {
         }
         binding.cardList.adapter = deckDetailAdapter
 
-        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        showBackButtonOnToolbar()
         setHasOptionsMenu(true)
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(this, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    hideBackButtonOnToolbar()
+                    fragmentManager?.popBackStack()
+                    if (isEnabled) {
+                        isEnabled = false
+                    }
+                }
+            })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            hideBackButtonOnToolbar()
             fragmentManager?.popBackStack()
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showBackButtonOnToolbar() {
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun hideBackButtonOnToolbar() {
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
     private fun bindToViewModel() {
