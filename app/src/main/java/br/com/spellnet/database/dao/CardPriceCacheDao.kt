@@ -23,6 +23,14 @@ interface CardPriceCacheDao {
                 "AND cpc.lastUpdated >= (1000 * strftime('%s', datetime('now', '-2 day'))) " +
                 "LIMIT 1;"
     )
+    fun getCardPriceCacheByCardNameWithRefreshPeriod(cardName: String): CardPriceCacheEntity?
+
+    @Query(
+        "SELECT cpc.* " +
+                "FROM card_price_cache cpc " +
+                "INNER JOIN card c ON c.id = cpc.card_id WHERE lower(c.name) = lower(:cardName) " +
+                "LIMIT 1;"
+    )
     fun getCardPriceCacheByCardName(cardName: String): CardPriceCacheEntity?
 
     @Insert

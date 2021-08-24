@@ -38,7 +38,7 @@ class CardRepository(
     }
 
     private fun retrieveCardPricingCache(card: Card): CardPricing?  {
-        val cardPriceCacheEntity = cardPriceCacheDao.getCardPriceCacheByCardName(card.name)
+        val cardPriceCacheEntity = cardPriceCacheDao.getCardPriceCacheByCardNameWithRefreshPeriod(card.name)
         return cardPriceCacheEntity?.let {
             CardPricing(
                 card,

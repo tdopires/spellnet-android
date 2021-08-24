@@ -122,7 +122,7 @@ class DeckDetailFragment : Fragment() {
     }
 
     private fun bindToViewModel() {
-        deckDetailsViewModel.deck().observe(viewLifecycleOwner, { deckResource ->
+        deckDetailsViewModel.deck().observe(viewLifecycleOwner, Observer { deckResource ->
             when (deckResource) {
                 is Resource.Loading -> {
                     binding.loading.show()
@@ -133,10 +133,10 @@ class DeckDetailFragment : Fragment() {
                     binding.cardList.show()
                     deckResource.data.map { cardEntry ->
                         val (haveCardQuantity, resourceCardPricing) = cardEntry.value
-                        resourceCardPricing.observe(viewLifecycleOwner, { resource ->
+                        resourceCardPricing.observe(viewLifecycleOwner, Observer { resource ->
                             handleCardPricingResource(cardEntry.key, resource)
                         })
-                        haveCardQuantity.observe(viewLifecycleOwner, {
+                        haveCardQuantity.observe(viewLifecycleOwner, Observer {
                             if (it is Resource.Success) {
                                 deckDetailAdapter?.updateCardHaveQuantity(it.data)
                             }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import br.com.spellnet.R
 import br.com.spellnet.commom.Resource
 import br.com.spellnet.commom.hide
@@ -71,7 +72,7 @@ class DeckListFragment : Fragment() {
     }
 
     private fun bindToViewModel() {
-        deckListViewModel.action().observe(viewLifecycleOwner, {
+        deckListViewModel.action().observe(viewLifecycleOwner, Observer {
             when (it) {
                 is DeckListViewModel.Action.AddDeck -> {
                     openAddDeck(it.deckUrlToImport)
@@ -85,7 +86,7 @@ class DeckListFragment : Fragment() {
             }
         })
 
-        deckListViewModel.deckList().observe(viewLifecycleOwner, {
+        deckListViewModel.deckList().observe(viewLifecycleOwner, Observer {
             when (it) {
                 is Resource.Success -> {
                     handleDeckList(it.data)
