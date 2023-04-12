@@ -1,23 +1,18 @@
-apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
-
-apply plugin: 'com.google.gms.google-services'
-
-apply plugin: 'com.google.firebase.crashlytics'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
 
 android {
-    compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
-    }
-    compileSdkVersion 30
+    compileSdkVersion 33
     defaultConfig {
         applicationId "br.com.spellnet"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 33
         multiDexEnabled true
 
         versionCode 10
@@ -30,6 +25,21 @@ android {
             }
         }
     }
+    buildFeatures {
+        viewBinding true
+    }
+    dataBinding {
+        enabled = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = 11
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -44,12 +54,6 @@ android {
                            'src/main/res-deckdetail']
         }
     }
-    dataBinding {
-        enabled = true
-    }
-    androidExtensions {
-        experimental = true
-    }
 
     useLibrary 'android.test.runner'
     useLibrary 'android.test.base'
@@ -61,49 +65,50 @@ dependencies {
     //implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:multidex:1.0.3"
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
 
     // Design and Android X Layouts
-    implementation "com.google.android.material:material:1.2.1"
-    implementation "androidx.appcompat:appcompat:1.2.0"
-    implementation "androidx.recyclerview:recyclerview:1.1.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.0.2"
+    implementation "com.google.android.material:material:1.8.0"
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "androidx.recyclerview:recyclerview:1.3.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
 
     // OkHttp + Retrofit2
     implementation 'com.squareup.okhttp:okhttp:2.5.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
 
     // Room
-    implementation "androidx.room:room-runtime:2.2.5"
-    implementation "androidx.room:room-ktx:2.2.5"
-    kapt "androidx.room:room-compiler:2.2.5"
+    implementation "androidx.room:room-runtime:2.4.3"
+    implementation "androidx.room:room-ktx:2.4.3"
+    kapt "androidx.room:room-compiler:2.4.3"
 //    implementation "androidx.room:room-coroutines:2.1.0-alpha04"
 
     // Koin
-    implementation "org.koin:koin-core:2.1.6"
-    implementation "org.koin:koin-androidx-viewmodel:2.1.6"
+    implementation "io.insert-koin:koin-core:3.4.0"
+    implementation "io.insert-koin:koin-android:3.4.0"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-analytics-ktx:17.6.0'
-    implementation 'com.google.firebase:firebase-crashlytics-ktx:17.2.2'
-
+    implementation platform('com.google.firebase:firebase-bom:31.3.0')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-functions-ktx'
 
     // Test dependencies
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
 
     // Core library
-    androidTestImplementation 'androidx.test:core:1.3.0'
+    androidTestImplementation 'androidx.test:core:1.5.0'
 
     // AndroidJUnitRunner and JUnit Rules
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test:rules:1.3.0'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
 
     // Assertions
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
@@ -115,4 +120,8 @@ dependencies {
     androidTestImplementation 'org.koin:koin-test:1.0.1'
     testImplementation "androidx.room:room-testing:2.2.5"
 
+}
+
+kapt {
+    correctErrorTypes = true
 }

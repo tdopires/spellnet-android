@@ -143,6 +143,7 @@ class DeckDetailFragment : Fragment() {
                         })
                     }
                 }
+                is Resource.Error -> { }
             }
         })
     }

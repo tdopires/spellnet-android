@@ -1,7 +1,7 @@
 package br.com.spellnet.entity
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.util.*
 
 data class DeckImport(

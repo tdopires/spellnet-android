@@ -91,6 +91,8 @@ class DeckListFragment : Fragment() {
                 is Resource.Success -> {
                     handleDeckList(it.data)
                 }
+                is Resource.Error -> { }
+                is Resource.Loading -> { }
             }
         })
     }

@@ -23,7 +23,7 @@ class CardRepository(
                 postValue(Resource.Success(cardPricingFromCache))
             }
 
-            val cardPricing = withContext(Dispatchers.IO) { cardService.fetchCardPricing(card) }
+            val cardPricing = withContext(Dispatchers.IO) { cardService.fetchCardPricingFirebase(card) }
             if (cardPricing != null) {
                 updateCardPricingCache(card, cardPricing)
                 postValue(Resource.Success(cardPricing))

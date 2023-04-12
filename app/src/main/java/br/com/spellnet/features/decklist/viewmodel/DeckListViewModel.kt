@@ -1,7 +1,7 @@
 package br.com.spellnet.features.decklist.viewmodel
 
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import br.com.spellnet.commom.SingleLiveEvent
 import br.com.spellnet.entity.Deck
@@ -19,7 +19,7 @@ class DeckListViewModel(private val deckBusiness: DeckBusiness) : ViewModel() {
     private val action = SingleLiveEvent<Action>()
 
     private val retryDeckList = SingleLiveEvent<Boolean>().apply { value = true }
-    private val deckList = Transformations.switchMap(retryDeckList) {
+    private val deckList = retryDeckList.switchMap {
         deckBusiness.deckList()
     }
 

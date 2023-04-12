@@ -17,7 +17,8 @@
                 android:name=".features.MainActivity"
                 android:launchMode="singleTask"
                 android:screenOrientation="portrait"
-                android:theme="@style/AppTheme.Splash">
+                android:theme="@style/AppTheme.Splash"
+                android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />

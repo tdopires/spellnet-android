@@ -3,23 +3,26 @@ package br.com.spellnet.features
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import br.com.spellnet.R
-import br.com.spellnet.features.deckdetail.viewmodel.DeckDetailViewModel
 import br.com.spellnet.features.decklist.view.DeckListFragment
 import br.com.spellnet.features.menu.MenuViewModel
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.functions.ktx.functions
+import com.google.firebase.ktx.Firebase
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
     private val menuViewModel: MenuViewModel by viewModel()
+    private lateinit var functions: FirebaseFunctions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.AppTheme)
         setContentView(R.layout.main_activity)
+        functions = Firebase.functions
 
         if (savedInstanceState == null) {
             handleDeckUrlIntentAndStartDeckListFragment(intent)

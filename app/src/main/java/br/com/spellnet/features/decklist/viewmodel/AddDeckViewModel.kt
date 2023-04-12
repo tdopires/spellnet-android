@@ -1,8 +1,8 @@
 package br.com.spellnet.features.decklist.viewmodel
 
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import br.com.spellnet.features.decklist.view.AddDeckForm
 import br.com.spellnet.features.decklist.view.toDeckImport
 import br.com.spellnet.model.decklist.DeckBusiness
@@ -16,7 +16,7 @@ class AddDeckViewModel(private val deckBusiness: DeckBusiness) : ViewModel() {
         deckImport.value = addDeckForm?.toDeckImport()
     }
 
-    fun saveDeck() = Transformations.switchMap(deckImport) {
+    fun saveDeck() = deckImport.switchMap {
         it?.let {
             deckBusiness.importDeck(it)
         }
